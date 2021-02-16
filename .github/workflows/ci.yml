@@ -10,7 +10,20 @@ on:
 
 jobs:
 
-  check:
+  check-sh:
+    needs: []
+    runs-on: ubuntu-latest
+    steps:
+    - name: "Set up GitHub Actions"
+      uses: actions/checkout@v2
+    - name: "Install shell script utilities"
+      run: |
+        sudo apt-get --yes install shellcheck
+    - name: "Check shell scripts format"
+      run: |
+        shellcheck --shell=sh $(find "scripts" -type f -name "*.sh")
+
+  check-python:
     needs: []
     runs-on: ubuntu-latest
     steps:
