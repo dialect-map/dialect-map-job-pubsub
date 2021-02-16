@@ -24,5 +24,8 @@ wheels/
 *.egg
 MANIFEST
 
+# Data update folder
+.update
+
 # MacOS files
 **/.DS_Store
