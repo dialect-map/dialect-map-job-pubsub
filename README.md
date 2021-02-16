@@ -9,6 +9,24 @@ and API connection capabilities, as well as the [Dialect map private API][dialec
 exposing a way of inserting records into the underlying database.
 
 
+### Data update
+As this repository is in charge of ingesting any data changes that may occur on the `dialect-map-data` submodule,
+it needs to compute the differences between one particular version of the JSON data files and the next.
+
+For this purpose, we are using [jd][jd-github-repo], a Golang / CLI tool.
+
+To simplify the _diff-computing_ operations, a set of scripts within the `scripts` folder have been defined.
+These scripts have a specific order to be run (specified by their prefix), and a mandatory argument to receive,
+indicating the name of the JSON file to compute the differences on.
+
+```sh
+echo "Computing JSON difference on jargons.json" && \
+    ./scripts/1_copy_data.sh && \
+    ./scripts/2_update_data.sh && \
+    ./scripts/3_compute_diffs.sh -f "jargons.json"
+```
+
+
 ### Development
 To install all the source code that is necessary to operate with this project:
 
@@ -52,3 +70,4 @@ make check
 [dialect-map-data]: https://github.com/dialect-map/dialect-map-data
 [dialect-map-io]: https://github.com/dialect-map/dialect-map-io
 [dialect-map-api]: https://github.com/dialect-map/dialect-map-private-api
+[jd-github-repo]: https://github.com/josephburnett/jd
