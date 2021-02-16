@@ -9,6 +9,28 @@ and API connection capabilities, as well as the [Dialect map private API][dialec
 exposing a way of inserting records into the underlying database.
 
 
+### Development
+To install all the source code that is necessary to operate with this project:
+
+```shell script
+git clone --recurse-submodules https://github.com/dialect-map/dialect-map-job-static
+```
+
+For cases where the project has already been cloned:
+
+```shell script
+git submodule update --init --recursive
+```
+
+The repositories defined as sub-modules will follow their own development pace.
+For cases where the sub-module repositories has been updated on GitHub, and want
+to propagate those changes to your local copy of the repositories:
+
+```shell script
+git submodule update --remote
+```
+
+
 ### Dependencies
 Python dependencies are specified within the `requirements.txt` and `requirements-dev.txt` files.
 
