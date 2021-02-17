@@ -1,0 +1,49 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  check-sh:
+    needs: []
+    runs-on: ubuntu-latest
+    steps:
+    - name: "Set up GitHub Actions"
+      uses: actions/checkout@v2
+    - name: "Install shell script utilities"
+      run: |
+        sudo apt-get --yes install shellcheck
+    - name: "Check shell scripts format"
+      run: |
+        shellcheck --shell=sh $(find "scripts" -type f -name "*.sh")
+
+  check-python:
+    needs: []
+    runs-on: ubuntu-latest
+    steps:
+    - name: "Set up GitHub Actions"
+      uses: actions/checkout@v2
+    - name: "Set up Python 3.7"
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+    - name: "Set up private packages SSH keys"
+      uses: webfactory/ssh-agent@v0.4.1
+      with:
+        ssh-private-key: |
+          ${{ secrets.DM_IO_SSH_KEY }}
+    - name: "Install Python dependencies"
+      run: |
+        pip install --no-cache-dir --upgrade pip setuptools wheel
+        pip install --no-cache-dir --requirement requirements.txt
+        pip install --no-cache-dir --requirement requirements-dev.txt
+        pip list
+    - name: "Check code format"
+      run: |
+        make check
