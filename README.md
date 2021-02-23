@@ -66,8 +66,16 @@ make check
 ```
 
 
+### Testing
+Project testing is performed using [Pytest][pytest-web]. In order to run the tests:
+```sh
+make test
+```
+
+
 [black-web]: https://black.readthedocs.io/en/stable/
 [dialect-map-data]: https://github.com/dialect-map/dialect-map-data
 [dialect-map-io]: https://github.com/dialect-map/dialect-map-io
 [dialect-map-api]: https://github.com/dialect-map/dialect-map-private-api
 [jd-github-repo]: https://github.com/josephburnett/jd
+[pytest-web]: https://docs.pytest.org/en/latest/#
