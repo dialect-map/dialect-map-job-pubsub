@@ -1,6 +1,9 @@
 APP_VERSION    = $(shell cat VERSION)
+COV_CONFIG     = ".coveragerc"
 SCRIPTS_FOLDER = "scripts"
 SOURCE_FOLDER  = "src"
+TESTS_FOLDER   = "tests"
+TESTS_PARAMS   = "-p no:cacheprovider"
 TYPING_PARAMS  = "--allow-redefinition --ignore-missing-imports --cache-dir=/dev/null"
 
 
@@ -19,3 +22,9 @@ install-dev:
 	@pip install -r requirements.txt
 	@pip install -r requirements-dev.txt
 	@pre-commit install
+
+
+.PHONY: test
+test:
+	@echo "Testing code"
+	@pytest --cov-config=$(COV_CONFIG) --cov=$(SOURCE_FOLDER) "$(TESTS_PARAMS)"
