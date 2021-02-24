@@ -27,5 +27,9 @@ MANIFEST
 # Data update folder
 .update
 
+# Test caches
+**/.coverage
+**/.pytest_cache
+
 # MacOS files
 **/.DS_Store

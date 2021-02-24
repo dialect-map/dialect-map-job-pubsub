@@ -1,0 +1,10 @@
+@ [0,"terms",1,"archived"]
+- false
++ true
+@ [2,"archived"]
+- false
++ true
+@ [26,"terms",2]
++ {"name":"example addition","regex":"[Ee]xample addition"}
+@ [29,"terms",1]
+- {"name":"proper-orthogonal decomposition","regex":"[Pp]roper[- ][Oo]rthogonal decomposition"}
