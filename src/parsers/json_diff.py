@@ -6,17 +6,17 @@ from abc import abstractmethod
 from typing import Generator
 from typing import List
 
-from ..models import JSONDiffEntry
+from ..models import DiffEntry
 
 
 class BaseDiffParser(ABC):
-    """ Interface for parsing the JSON diff results """
+    """ Interface for parsing the data file diff results """
 
     @abstractmethod
     def get_creation_entries(self, file_path: str) -> Generator:
         """
-        Parses a given JSON difference file to extract the creation entries
-        :param file_path: path to the JSON diff file
+        Parses a given difference file to extract the creation entries
+        :param file_path: path to the diff file
         :return: list of creation entries
         """
 
@@ -25,8 +25,8 @@ class BaseDiffParser(ABC):
     @abstractmethod
     def get_deletion_entries(self, file_path: str) -> Generator:
         """
-        Parses a given JSON difference file to extract the deletion entries
-        :param file_path: path to the JSON diff file
+        Parses a given difference file to extract the deletion entries
+        :param file_path: path to the diff file
         :return: list of deletion entries
         """
 
@@ -35,8 +35,8 @@ class BaseDiffParser(ABC):
     @abstractmethod
     def get_edition_entries(self, file_path: str) -> Generator:
         """
-        Parses a given JSON difference file to extract the edition entries
-        :param file_path: path to the JSON diff file
+        Parses a given difference file to extract the edition entries
+        :param file_path: path to the diff file
         :return: list of edition entries
         """
 
@@ -54,7 +54,7 @@ class JDDiffParser(BaseDiffParser):
 
         self.parse_func = json.loads
 
-    def _parse_diff_lines(self, lines: List[str]) -> JSONDiffEntry:
+    def _parse_diff_lines(self, lines: List[str]) -> DiffEntry:
         """
         Parses a given list of JSON diff file lines
         :param lines: lines from the JSON diff file
@@ -74,7 +74,7 @@ class JDDiffParser(BaseDiffParser):
                 post = self.parse_func(line[2:])
                 continue
 
-        return JSONDiffEntry(path, prev, post)
+        return DiffEntry(path, prev, post)
 
     def _parse_diff_file(self, file_path: str) -> Generator:
         """

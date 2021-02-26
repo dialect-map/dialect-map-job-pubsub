@@ -6,12 +6,12 @@ from typing import Any
 
 
 @dataclass
-class JSONDiffEntry:
+class DiffEntry:
     """
-    Data class for the JSON diff entries
+    Data class for the data files diff entries
 
     Class attributes:
-        path: path to the JSON entry that was changed
+        path: data file path to the entry that was changed
         value_prev: entry value before the change
         value_post: entry value after the change
     """
