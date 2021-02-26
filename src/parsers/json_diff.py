@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
-from abc import ABCMeta
+from abc import ABC
 from abc import abstractmethod
 from typing import Generator
 from typing import List
@@ -9,7 +9,7 @@ from typing import List
 from ..models import JSONDiffEntry
 
 
-class BaseDiffParser(metaclass=ABCMeta):
+class BaseDiffParser(ABC):
     """ Interface for parsing the JSON diff results """
 
     @abstractmethod
