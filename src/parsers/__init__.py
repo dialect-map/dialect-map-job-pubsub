@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-from .json_diff import BaseDiffParser
-from .json_diff import JDDiffParser
+from .files_diff import BaseDiffParser
+from .files_diff import JDDiffParser

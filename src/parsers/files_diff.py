@@ -10,7 +10,7 @@ from ..models import DiffEntry
 
 
 class BaseDiffParser(ABC):
-    """ Interface for parsing the data file diff results """
+    """ Interface for parsing the diff files """
 
     @abstractmethod
     def get_creation_entries(self, file_path: str) -> Generator:
