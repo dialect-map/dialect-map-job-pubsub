@@ -45,7 +45,7 @@ class PropertyRecordMapper(BaseRecordMapper):
         value = record[self.property]
 
         for mapping in self.mappings:
-            if re.match(mapping.id_regex, value):
+            if re.match(mapping.regex, value):
                 return mapping.name
 
         raise ValueError(f"No corresponding type. Record: {record}")
