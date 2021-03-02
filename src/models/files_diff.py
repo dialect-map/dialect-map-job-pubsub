@@ -20,6 +20,18 @@ class DiffEntry:
     value_prev: Any = field(default=None)
     value_post: Any = field(default=None)
 
+    @property
+    def object_path(self) -> list:
+        """
+        Path to the object containing an edited field
+        :return: list of keys / indexes
+        """
+
+        if self.is_edition():
+            return self.path[:-1]
+        else:
+            return self.path[:]
+
     def is_creation(self) -> bool:
         """
         Checks if the diff entry correspond to a creation

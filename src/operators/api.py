@@ -122,7 +122,7 @@ class DialectMapOperator(BaseOperator):
 
             record_api = select_route(model)
             record_ada = select_adapter(model)
-            record_obj = self.data_parser.get_object(data_path, entry.path)
+            record_obj = self.data_parser.get_object(data_path, entry.object_path)
             record_obj = record_ada.adapt_fields(record_obj)
 
             created += self._create(record_api.api_path, record_obj)
@@ -144,7 +144,7 @@ class DialectMapOperator(BaseOperator):
             model = self.type_mapper.infer_type(entry.value_post)
 
             record_api = select_route(model)
-            record_obj = self.data_parser.get_object(data_path, entry.path)
+            record_obj = self.data_parser.get_object(data_path, entry.object_path)
             record_id = record_obj["id"]
 
             archived += self._archive(record_api.api_path, record_id)
