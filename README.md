@@ -10,10 +10,10 @@ exposing a way of inserting records into the underlying database.
 
 
 ### Data update
-As this repository is in charge of ingesting any data changes that may occur on the `dialect-map-data` submodule,
-it needs to compute the differences between one particular version of the JSON data files and the next.
+In order to ingest any data changes happening on the `dialect-map-data` submodule, this project needs
+to compute the differences between one particular version of the JSON data files and the next.
 
-For this purpose, we are using [jd][jd-github-repo], a Golang / CLI tool.
+For this purpose, a Golang / CLI tool called [jd][jd-github-repo] is used.
 
 To simplify the _diff-computing_ operations, a set of scripts within the `scripts` folder have been defined.
 These scripts have a specific order to be run (specified by their prefix), and a mandatory argument to receive,
