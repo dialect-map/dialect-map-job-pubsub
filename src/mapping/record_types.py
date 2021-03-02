@@ -14,6 +14,7 @@ TYPE_CATEGORY = DataType(
         r")"
         r"(-\w+)?"
         r"(\.\w+)?"
+        r"(-\w+)?"
         r"$"
     ),
 )
