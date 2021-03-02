@@ -9,7 +9,6 @@ from dialect_map_io import DialectMapAPI
 from .routes import select_route
 from ..mapping import select_adapter
 from ..mapping import BaseRecordMapper
-from ..mapping import IDRecordMapper
 from ..parsers import BaseDataParser
 from ..parsers import BaseDiffParser
 from ..parsers import JSONDataParser
@@ -50,24 +49,22 @@ class DialectMapOperator(BaseOperator):
     def __init__(
         self,
         api_object: DialectMapAPI,
+        type_mapper: BaseRecordMapper,
         data_parser: BaseDataParser = None,
         diff_parser: BaseDiffParser = None,
-        type_mapper: BaseRecordMapper = None,
     ):
         """
         Initializes the Dialect map operator object
         :param api_object: Dialect map API instantiated object
+        :param type_mapper: diff entries to data types mapper
         :param data_parser: parser to read data files contents (optional)
         :param diff_parser: parser to read data files diffs (optional)
-        :param type_mapper: diff entries to data types mapper (optional)
         """
 
         if data_parser is None:
             data_parser = JSONDataParser()
         if diff_parser is None:
             diff_parser = JDDiffParser()
-        if type_mapper is None:
-            type_mapper = IDRecordMapper()
 
         self.api_object = api_object
         self.data_parser = data_parser
