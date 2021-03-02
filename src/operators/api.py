@@ -55,7 +55,7 @@ class DialectMapOperator(BaseOperator):
         type_mapper: BaseRecordMapper = None,
     ):
         """
-        Initializes the
+        Initializes the Dialect map operator object
         :param api_object: Dialect map API instantiated object
         :param data_parser: parser to read data files contents (optional)
         :param diff_parser: parser to read data files diffs (optional)
