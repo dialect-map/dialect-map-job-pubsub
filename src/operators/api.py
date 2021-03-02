@@ -6,13 +6,13 @@ from abc import abstractmethod
 
 from dialect_map_io import DialectMapAPI
 
+from mapping import select_adapter
+from mapping import BaseRecordMapper
+from parsers import BaseDataParser
+from parsers import BaseDiffParser
+from parsers import JSONDataParser
+from parsers import JDDiffParser
 from .routes import select_route
-from ..mapping import select_adapter
-from ..mapping import BaseRecordMapper
-from ..parsers import BaseDataParser
-from ..parsers import BaseDiffParser
-from ..parsers import JSONDataParser
-from ..parsers import JDDiffParser
 
 logger = logging.getLogger()
 

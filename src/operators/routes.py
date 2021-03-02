@@ -5,9 +5,9 @@ from dialect_map_io import DM_CATEGORY_ROUTE
 from dialect_map_io import DM_JARGON_ROUTE
 from dialect_map_io import DM_JARGON_GROUP_ROUTE
 
-from ..mapping import TYPE_CATEGORY
-from ..mapping import TYPE_GROUP
-from ..mapping import TYPE_JARGON
+from mapping import TYPE_CATEGORY
+from mapping import TYPE_GROUP
+from mapping import TYPE_JARGON
 
 
 API_ROUTES = {

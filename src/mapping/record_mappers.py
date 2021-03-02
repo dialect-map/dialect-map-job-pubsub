@@ -6,7 +6,7 @@ from abc import ABC
 from abc import abstractmethod
 from typing import List
 
-from ..models import DataType
+from models import DataType
 
 
 class BaseRecordMapper(ABC):
