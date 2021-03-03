@@ -11,7 +11,7 @@ def test_category_adapter_valid():
     """ Test the adaptation of valid category samples """
 
     sample = {"id": "example", "description": "example"}
-    record = CategoryAdapter.adapt_fields(sample)
+    record = CategoryAdapter().adapt_fields(sample)
     fields = record.keys()
 
     assert "category_id" in fields
@@ -22,7 +22,7 @@ def test_category_adapter_valid():
 def test_category_adapter_invalid():
     """ Test the adaptation of invalid category samples """
 
-    assert pytest.raises(KeyError, CategoryAdapter.adapt_fields, {})
+    assert pytest.raises(KeyError, CategoryAdapter().adapt_fields, {})
 
 
 def test_jargon_adapter_valid():
@@ -35,7 +35,7 @@ def test_jargon_adapter_valid():
         "archived": False,
     }
 
-    record = JargonAdapter.adapt_fields(sample)
+    record = JargonAdapter().adapt_fields(sample)
     fields = record.keys()
 
     assert "jargon_id" in fields
@@ -58,7 +58,7 @@ def test_jargon_adapter_invalid():
         "archived": False,
     }
 
-    assert pytest.raises(ValueError, JargonAdapter.adapt_fields, sample)
+    assert pytest.raises(AssertionError, JargonAdapter().adapt_fields, sample)
 
 
 def test_group_adapter_valid():
@@ -71,7 +71,7 @@ def test_group_adapter_valid():
         "terms": [],
     }
 
-    record = JargonGroupAdapter.adapt_fields(sample)
+    record = JargonGroupAdapter().adapt_fields(sample)
     fields = record.keys()
 
     assert "group_id" in fields
@@ -83,4 +83,4 @@ def test_group_adapter_valid():
 def test_group_adapter_invalid():
     """ Test the adaptation of invalid jargon samples """
 
-    assert pytest.raises(KeyError, JargonGroupAdapter.adapt_fields, {})
+    assert pytest.raises(KeyError, JargonGroupAdapter().adapt_fields, {})

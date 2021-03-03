@@ -10,9 +10,17 @@ from datetime import datetime
 class BaseAdapter(ABC):
     """ Interface for the data model adapter classes """
 
-    @staticmethod
+    @property
+    def datetime_now(self) -> str:
+        """
+        Returns the current date-time in ISO format
+        :return: current date-time in ISO format
+        """
+
+        return datetime.now().isoformat(sep=" ", timespec="seconds")
+
     @abstractmethod
-    def adapt_fields(values: dict) -> dict:
+    def adapt_fields(self, values: dict) -> dict:
         """
         Adapts a given data record to its standardized set of fields
         :param values: entry data fields
@@ -25,8 +33,7 @@ class BaseAdapter(ABC):
 class CategoryAdapter(BaseAdapter):
     """ Category data model adapter class """
 
-    @staticmethod
-    def adapt_fields(values: dict) -> dict:
+    def adapt_fields(self, values: dict) -> dict:
         """
         Adapts a given data record to its standardized set of fields
         :param values: entry data fields
@@ -36,7 +43,7 @@ class CategoryAdapter(BaseAdapter):
         return {
             "category_id": values["id"],
             "description": values["description"],
-            "created_at": datetime.now(),
+            "created_at": self.datetime_now,
         }
 
 
@@ -44,21 +51,18 @@ class JargonAdapter(BaseAdapter):
     """ Jargon data model adapter class """
 
     @staticmethod
-    def _extract_group_id(jargon_id: str) -> str:
+    def extract_group_id(jargon_id: str) -> str:
         """
         Extracts the jargon group ID from the jargon ID itself.
         :param jargon_id: jargon ID values
         :return: group ID
         """
 
-        matches = re.search(r"group-\d+", jargon_id)
-        if matches is None:
-            raise ValueError(f"Invalid jargon ID: {jargon_id}")
+        matches = re.search(r"^(group-\d+)-jargon-\d+$", jargon_id)
+        assert matches is not None, f"Invalid jargon ID: {jargon_id}"
+        return matches.group(1)
 
-        return matches.group(0)
-
-    @staticmethod
-    def adapt_fields(values: dict) -> dict:
+    def adapt_fields(self, values: dict) -> dict:
         """
         Adapts a given data record to its standardized set of fields
         :param values: entry data fields
@@ -66,7 +70,7 @@ class JargonAdapter(BaseAdapter):
         """
 
         jargon_id = values["id"]
-        group_id = JargonAdapter._extract_group_id(jargon_id)
+        group_id = self.extract_group_id(jargon_id)
 
         return {
             "group_id": group_id,
@@ -74,15 +78,14 @@ class JargonAdapter(BaseAdapter):
             "jargon_str": values["name"],
             "jargon_regex": values["regex"],
             "archived": values["archived"],
-            "created_at": datetime.now(),
+            "created_at": self.datetime_now,
         }
 
 
 class JargonGroupAdapter(BaseAdapter):
     """ Jargon data model adapter class """
 
-    @staticmethod
-    def adapt_fields(values: dict) -> dict:
+    def adapt_fields(self, values: dict) -> dict:
         """
         Adapts a given data record to its standardized set of fields
         :param values: entry data fields
@@ -93,5 +96,5 @@ class JargonGroupAdapter(BaseAdapter):
             "group_id": values["id"],
             "description": values["description"],
             "archived": values["archived"],
-            "created_at": datetime.now(),
+            "created_at": self.datetime_now,
         }
