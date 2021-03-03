@@ -58,11 +58,9 @@ class JargonAdapter(BaseAdapter):
         :return: group ID
         """
 
-        matches = re.search(r"group-\d+", jargon_id)
-        if matches is None:
-            raise ValueError(f"Invalid jargon ID: {jargon_id}")
-
-        return matches.group(0)
+        matches = re.search(r"^(group-\d+)-jargon-\d+$", jargon_id)
+        assert matches is not None, f"Invalid jargon ID: {jargon_id}"
+        return matches.group(1)
 
     def adapt_fields(self, values: dict) -> dict:
         """
