@@ -12,8 +12,8 @@ from operators import DialectMapOperator
 
 from logs import setup_logger
 from files import DATA_FILES
-from paths import build_data_path
-from paths import build_diff_path
+from paths import build_differ_file_path
+from paths import build_module_file_path
 
 logger = logging.getLogger()
 
@@ -73,7 +73,7 @@ def init_mapper(field: str, types: list) -> PropertyRecordMapper:
     return mapper
 
 
-def dispatch(api: DialectMapAPI, mapper: BaseRecordMapper, file_name: str) -> None:
+def dispatch(api: DialectMapAPI, mapper: BaseRecordMapper, file_name: str):
     """
     Perform operations on the provided API given a static data file
     :param api: API object to operate with
@@ -81,8 +81,8 @@ def dispatch(api: DialectMapAPI, mapper: BaseRecordMapper, file_name: str) -> No
     :param file_name: static data file name
     """
 
-    data_path = build_data_path(file_name)
-    diff_path = build_diff_path(file_name)
+    data_path = build_module_file_path(file_name)
+    diff_path = build_differ_file_path(file_name)
 
     operator = DialectMapOperator(api, mapper)
     inserted = operator.create_records(data_path, diff_path)
