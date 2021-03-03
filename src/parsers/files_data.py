@@ -62,7 +62,7 @@ class JSONDataParser(BaseDataParser):
 
         data_obj = self.get_content(file_path)
 
-        for step in data_obj:
+        for step in obj_path:
             data_obj = data_obj[step]
 
         return data_obj
