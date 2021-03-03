@@ -2,6 +2,7 @@
 
 import click
 import logging
+import subprocess
 
 from dialect_map_io import DialectMapAPI
 from dialect_map_io import OpenIDAuthenticator
@@ -12,8 +13,10 @@ from operators import DialectMapOperator
 
 from logs import setup_logger
 from files import DATA_FILES
+from paths import build_backup_file_path
 from paths import build_differ_file_path
 from paths import build_module_file_path
+from paths import safe_file_copy
 
 logger = logging.getLogger()
 
@@ -21,6 +24,20 @@ logger = logging.getLogger()
 @click.group()
 def main():
     pass
+
+
+@main.command()
+def diff():
+    """ Computes the diffs between consecutive versions of the data """
+
+    for file in DATA_FILES:
+        backup_file = build_backup_file_path(file.name)
+        module_file = build_module_file_path(file.name)
+        output_file = build_differ_file_path(file.name)
+
+        safe_file_copy(module_file, backup_file)
+        subprocess.run(["git", "submodule", "update", "--remote"], check=True)
+        subprocess.run(["jd", "-o", output_file, backup_file, module_file], check=True)
 
 
 @main.command()
