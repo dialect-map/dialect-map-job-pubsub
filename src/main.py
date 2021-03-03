@@ -44,14 +44,12 @@ def diff():
 @click.option(
     "--api-url",
     envvar="DIALECT_MAP_API_URL",
-    default="https://dialect-map-private-api-ms4sotrd6q-uk.a.run.app",
     help="Private API base URL",
     type=str,
 )
 @click.option(
     "--key-path",
     envvar="DIALECT_MAP_KEY_PATH",
-    default="~/.config/gcloud/service_accounts/dialect_map/ds3-dialect-map.json",
     help="Path to the Service Account key",
     type=str,
 )
@@ -59,7 +57,7 @@ def diff():
     "--log-level",
     envvar="DIALECT_MAP_LOG_LEVEL",
     default="INFO",
-    help="Severity level for the logging messages",
+    help="Log messages level",
     type=str,
 )
 def run(api_url: str, key_path: str, log_level: str):
