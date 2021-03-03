@@ -115,14 +115,13 @@ class DialectMapOperator(BaseOperator):
         created = 0
 
         for entry in entries:
-            model = self.type_mapper.infer_type(entry.value_post)
-
-            record_api = select_route(model)
-            record_ada = select_adapter(model)
             record_obj = self.data_parser.get_object(data_path, entry.object_path)
-            record_obj = record_ada.adapt_fields(record_obj)
+            record_type = self.type_mapper.infer_type(record_obj)
+            record_route = select_route(record_type)
+            record_adapt = select_adapter(record_type)
 
-            created += self._create(record_api.api_path, record_obj)
+            data_obj = record_adapt.adapt_fields(record_obj)
+            created += self._create(record_route.api_path, data_obj)
 
         return created
 
@@ -138,12 +137,10 @@ class DialectMapOperator(BaseOperator):
         archived = 0
 
         for entry in entries:
-            model = self.type_mapper.infer_type(entry.value_post)
-
-            record_api = select_route(model)
             record_obj = self.data_parser.get_object(data_path, entry.object_path)
-            record_id = record_obj["id"]
+            record_type = self.type_mapper.infer_type(record_obj)
+            record_route = select_route(record_type)
 
-            archived += self._archive(record_api.api_path, record_id)
+            archived += self._archive(record_route.api_path, record_obj["id"])
 
         return archived
