@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import shutil
+
 from pathlib import Path
 
 
@@ -58,3 +60,16 @@ def build_module_file_path(file_name: str) -> str:
 
     # fmt: on
     return str(data_path)
+
+
+def safe_file_copy(source_file: str, target_file: str) -> None:
+    """
+    Copies the specified file creating intermediate directories
+    :param source_file: source file path
+    :param target_file: target file path
+    """
+
+    target_folder = Path(target_file).parent
+    target_folder.mkdir(exist_ok=True)
+
+    shutil.copy(source_file, target_folder)
