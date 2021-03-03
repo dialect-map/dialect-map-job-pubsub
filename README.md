@@ -1,4 +1,4 @@
-# Dialect map: static-data job
+# Dialect map: static-data job ⚙️
 
 ### About
 This repository contains the data-ingestion job to propagate _static_ data to the database.
@@ -22,9 +22,9 @@ For cases where the project has already been cloned:
 git submodule update --init --recursive
 ```
 
-The repositories defined as sub-modules will follow their own development pace.
-For cases where the sub-module repositories has been updated on GitHub, and want
-to propagate those changes to your local copy of the repositories:
+The repository defined as submodule will follow their own development pace.
+For cases where the submodule repository has been updated on GitHub, and want
+to propagate those changes to your local copy:
 
 ```sh
 git submodule update --remote
@@ -33,8 +33,11 @@ git submodule update --remote
 
 ### Dependencies
 Python dependencies are specified within the `requirements.txt` and `requirements-dev.txt` files.
+In terms of binary dependencies, the project depends on a Golang / CLI tool called [jd][jd-github-repo].
+This tool is used to generate the differences (_diffs_) between consecutive versions of
+the [dialect-map-data][dialect-map-data] submodule data files
 
-In order to install the development packages, as long as the defined commit hooks:
+In order to install the development packages, non-python dependencies and commit hooks:
 ```sh
 make install-dev
 ```
@@ -55,37 +58,22 @@ make test
 ```
 
 
-### Data update
-In order to ingest any data changes happening on the `dialect-map-data` submodule, this project needs
-to compute the differences between one particular version of the JSON data files and the next.
-
-For this purpose, a Golang / CLI tool called [jd][jd-github-repo] is used.
-
-To simplify the _diff-computing_ operations, a set of scripts within the `scripts` folder have been defined.
-These scripts have a specific order to be run (specified by their prefix), and a mandatory argument to receive,
-indicating the name of the JSON file to compute the differences on.
-
+### Run
+The project contains a [main.py][main-module] module exposing a CLI. Although this CLI contains several commands
+that can be executed in a separated manner, the `Makefile` defines a rule to execute them in the standard order.
 ```sh
-echo "Computing JSON difference on jargons.json" && \
-    ./scripts/1_copy_data.sh && \
-    ./scripts/2_update_data.sh && \
-    ./scripts/3_compute_diffs.sh -f "jargons.json"
+export DIALECT_MAP_API_URL="<URL>"
+export DIALECT_MAP_KEY_PATH="<PATH>"
+make run
 ```
 
-### Run job
-To propagate data differences into the database, the [main.py][main-module] module defines a `run` command:
+This high level rule can be configured with the following env. variables
 
-```sh
-python3 src/main.py run [OPTIONS]
-```
-
-This command accepts several options, from which the most relevant are:
-
-| OPTION         | ENV VARIABLE             | DEFAULT      | REQUIRED | DESCRIPTION                        |
-|----------------|--------------------------|--------------|----------|------------------------------------|
-| --api-url      | DIALECT_MAP_API_URL      | ...          | No       | Private API base URL               |
-| --key-path     | DIALECT_MAP_KEY_PATH     | ...          | No       | Path to the Service Account key    |
-| --log-level    | DIALECT_MAP_LOG_LEVEL    | INFO         | No       | Log messages level                 |
+| ENV VARIABLE             | DEFAULT            | REQUIRED | DESCRIPTION                                   |
+|--------------------------|--------------------|----------|-----------------------------------------------|
+| DIALECT_MAP_API_URL      | -                  | Yes      | Private API base URL                          |
+| DIALECT_MAP_KEY_PATH     | -                  | Yes      | Path to the Service Account key               |
+| DIALECT_MAP_LOG_LEVEL    | INFO               | No       | Log messages level                            |
 
 
 [black-web]: https://black.readthedocs.io/en/stable/
