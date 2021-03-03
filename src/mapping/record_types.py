@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import re
-from ..models import DataType
+
+from models import DataType
 
 
 TYPE_CATEGORY = DataType(

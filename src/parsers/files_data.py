@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+
 from abc import ABC
 from abc import abstractmethod
 from typing import Any

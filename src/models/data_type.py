@@ -22,12 +22,3 @@ class DataType:
 
         assert self.regex.pattern.startswith("^")
         assert self.regex.pattern.endswith("$")
-
-    @property
-    def id_regex(self) -> Pattern:
-        """
-        Identifier regular expression for the ID field
-        :return: regular expression
-        """
-
-        return self.regex

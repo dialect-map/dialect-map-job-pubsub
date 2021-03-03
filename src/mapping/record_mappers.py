@@ -6,10 +6,7 @@ from abc import ABC
 from abc import abstractmethod
 from typing import List
 
-from .record_types import TYPE_CATEGORY
-from .record_types import TYPE_JARGON
-from .record_types import TYPE_GROUP
-from ..models import DataType
+from models import DataType
 
 
 class BaseRecordMapper(ABC):
@@ -48,14 +45,7 @@ class PropertyRecordMapper(BaseRecordMapper):
         value = record[self.property]
 
         for mapping in self.mappings:
-            if re.match(mapping.id_regex, value):
+            if re.match(mapping.regex, value):
                 return mapping.name
 
         raise ValueError(f"No corresponding type. Record: {record}")
-
-
-class IDRecordMapper(PropertyRecordMapper):
-    """ Model type mapper that uses the data entry ID """
-
-    mappings = [TYPE_CATEGORY, TYPE_GROUP, TYPE_JARGON]
-    property = "id"
