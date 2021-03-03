@@ -20,10 +20,18 @@ check:
 .PHONY: install-dev
 install-dev:
 	@echo "Installing Development packages"
-	@sh "$(SCRIPTS_FOLDER)/0_install_jd.sh"
+	@sh "$(SCRIPTS_FOLDER)/install_jd.sh"
 	@pip install -r requirements.txt
 	@pip install -r requirements-dev.txt
 	@pre-commit install
+
+
+.PHONY: run
+run:
+	@echo "Computing data diffs"
+	@python3 $(SOURCE_FOLDER)/main.py diff
+	@echo "Dispatching data changes"
+	@python3 $(SOURCE_FOLDER)/main.py run
 
 
 .PHONY: test
