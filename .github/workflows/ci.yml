@@ -14,20 +14,7 @@ on:
 
 jobs:
 
-  check-shell:
-    needs: []
-    runs-on: ubuntu-latest
-    steps:
-    - name: "Set up GitHub Actions"
-      uses: actions/checkout@v2
-    - name: "Install shell script utilities"
-      run: |
-        sudo apt-get --yes install shellcheck
-    - name: "Check shell scripts format"
-      run: |
-        shellcheck --shell=sh $(find "scripts" -type f -name "*.sh")
-
-  check-python:
+  check:
     needs: []
     runs-on: ubuntu-latest
     steps:
@@ -53,7 +40,7 @@ jobs:
         make check
 
   test:
-    needs: [check-shell, check-python]
+    needs: [check]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
