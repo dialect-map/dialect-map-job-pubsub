@@ -27,10 +27,11 @@ def build_backup_file_path(file_name: str) -> str:
     return str(backup_path)
 
 
-def build_differ_file_path(file_name: str) -> str:
+def build_differ_file_path(file_name: str, check: bool = False) -> str:
     """
     Build the path to the desired static data file diff
     :param file_name: name of the static data file diff
+    :param check: whether to check that the path exists (optional)
     :return: file path
     """
 
@@ -41,13 +42,17 @@ def build_differ_file_path(file_name: str) -> str:
         .joinpath(file_name)
 
     # fmt: on
+    if check and not diff_path.is_file():
+        raise OSError(f"There is no diff file: {file_name}")
+
     return str(diff_path)
 
 
-def build_module_file_path(file_name: str) -> str:
+def build_module_file_path(file_name: str, check: bool = False) -> str:
     """
     Build the path to the desired static data file
     :param file_name: name of the static data file
+    :param check: whether to check that the path exists (optional)
     :return: file path
     """
 
@@ -59,6 +64,9 @@ def build_module_file_path(file_name: str) -> str:
         .joinpath(file_name)
 
     # fmt: on
+    if check and not data_path.is_file():
+        raise OSError(f"There is no data file: {file_name}")
+
     return str(data_path)
 
 

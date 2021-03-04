@@ -96,15 +96,21 @@ def dispatch(api: DialectMapAPI, mapper: BaseRecordMapper, file_name: str):
     :param file_name: static data file name
     """
 
-    data_path = build_module_file_path(file_name)
-    diff_path = build_differ_file_path(file_name)
+    inserted = 0
+    archived = 0
 
-    operator = DialectMapOperator(api, mapper)
-    inserted = operator.create_records(data_path, diff_path)
-    archived = operator.archive_records(data_path, diff_path)
-
-    logger.info(f"Number of created records: {inserted}")
-    logger.info(f"Number of archived records: {archived}")
+    try:
+        data_path = build_module_file_path(file_name, check=True)
+        diff_path = build_differ_file_path(file_name, check=True)
+    except OSError as error:
+        logger.info(f"Stop dispatch process. Issue: {error}")
+    else:
+        operator = DialectMapOperator(api, mapper)
+        inserted = operator.create_records(data_path, diff_path)
+        archived = operator.archive_records(data_path, diff_path)
+    finally:
+        logger.info(f"Number of created records: {inserted}")
+        logger.info(f"Number of archived records: {archived}")
 
 
 if __name__ == "__main__":
