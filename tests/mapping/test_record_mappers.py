@@ -2,9 +2,11 @@
 
 import pytest
 
-from src.mapping.record_mappers import BaseRecordMapper
-from src.mapping.record_mappers import PropertyRecordMapper
-from src.mapping.record_types import *
+from src.mapping import BaseRecordMapper
+from src.mapping import PropertyRecordMapper
+from src.mapping import TYPE_CATEGORY
+from src.mapping import TYPE_JARGON
+from src.mapping import TYPE_GROUP
 
 
 @pytest.fixture(scope="module")
