@@ -24,14 +24,6 @@ install-dev:
 	@pre-commit install
 
 
-.PHONY: run
-run:
-	@echo "Computing data diffs"
-	@python3 $(SOURCE_FOLDER)/main.py diff
-	@echo "Dispatching data changes"
-	@python3 $(SOURCE_FOLDER)/main.py run
-
-
 .PHONY: test
 test:
 	@echo "Testing code"
