@@ -8,10 +8,6 @@ from dialect_map_io import DialectMapAPI
 
 from mapping import select_adapter
 from mapping import BaseRecordMapper
-from parsers import BaseDataParser
-from parsers import BaseDiffParser
-from parsers import JSONDataParser
-from parsers import JDDiffParser
 from .routes import select_route
 
 logger = logging.getLogger()
@@ -21,22 +17,20 @@ class BaseOperator(ABC):
     """ Interface for the data object operator classes """
 
     @abstractmethod
-    def create_records(self, data_path: str, diff_path: str) -> int:
+    def create_records(self, messages: list) -> int:
         """
-        Transform creation diff file entries into API operations
-        :param data_path: path to the data file
-        :param diff_path: path to the diff file
+        Transform received data-diff messages into DB records
+        :param messages: list of data-diff messages
         :return: number of inserted records
         """
 
         raise NotImplementedError()
 
     @abstractmethod
-    def archive_records(self, data_path: str, diff_path: str) -> int:
+    def archive_records(self, messages: list) -> int:
         """
-        Transform edition diff file entries into API operations
-        :param data_path: path to the data file
-        :param diff_path: path to the diff file
+        Transform received data-diff messages into archived DB records
+        :param messages: list of data-diff messages
         :return: number of archived records
         """
 
@@ -46,29 +40,14 @@ class BaseOperator(ABC):
 class DialectMapOperator(BaseOperator):
     """ Class to operate on Dialect map data objects """
 
-    def __init__(
-        self,
-        api_object: DialectMapAPI,
-        type_mapper: BaseRecordMapper,
-        data_parser: BaseDataParser = None,
-        diff_parser: BaseDiffParser = None,
-    ):
+    def __init__(self, api_object: DialectMapAPI, type_mapper: BaseRecordMapper):
         """
         Initializes the Dialect map operator object
         :param api_object: Dialect map API instantiated object
         :param type_mapper: diff entries to data types mapper
-        :param data_parser: parser to read data files contents (optional)
-        :param diff_parser: parser to read data files diffs (optional)
         """
 
-        if data_parser is None:
-            data_parser = JSONDataParser()
-        if diff_parser is None:
-            diff_parser = JDDiffParser()
-
         self.api_object = api_object
-        self.data_parser = data_parser
-        self.diff_parser = diff_parser
         self.type_mapper = type_mapper
 
     def _create(self, api_path: str, record: dict) -> int:
@@ -103,44 +82,38 @@ class DialectMapOperator(BaseOperator):
             logger.error(f"Error: {error}")
             return 0
 
-    def create_records(self, data_path: str, diff_path: str) -> int:
+    def create_records(self, messages: list) -> int:
         """
-        Transform creation diff file entries into API operations
-        :param data_path: path to the data file
-        :param diff_path: path to the diff file
+        Transform received data-diff messages into DB records
+        :param messages: list of data-diff messages
         :return: number of inserted records
         """
 
-        entries = self.diff_parser.get_creation_entries(diff_path)
         created = 0
 
-        for entry in entries:
-            record_obj = self.data_parser.get_object(data_path, entry.object_path)
-            record_type = self.type_mapper.infer_type(record_obj)
+        for message in messages:
+            record_type = self.type_mapper.infer_type(message)
             record_route = select_route(record_type)
             record_adapt = select_adapter(record_type)
 
-            data_obj = record_adapt.adapt_fields(record_obj)
+            data_obj = record_adapt.adapt_fields(message)
             created += self._create(record_route.api_path, data_obj)
 
         return created
 
-    def archive_records(self, data_path: str, diff_path: str) -> int:
+    def archive_records(self, messages: list) -> int:
         """
-        Transform edition diff file entries into API operations
-        :param data_path: path to the data file
-        :param diff_path: path to the diff file
+        Transform received data-diff messages into archived DB records
+        :param messages: list of data-diff messages
         :return: number of archived records
         """
 
-        entries = self.diff_parser.get_edition_entries(diff_path)
         archived = 0
 
-        for entry in entries:
-            record_obj = self.data_parser.get_object(data_path, entry.object_path)
-            record_type = self.type_mapper.infer_type(record_obj)
+        for message in messages:
+            record_type = self.type_mapper.infer_type(message)
             record_route = select_route(record_type)
 
-            archived += self._archive(record_route.api_path, record_obj["id"])
+            archived += self._archive(record_route.api_path, message["id"])
 
         return archived
