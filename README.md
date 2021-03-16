@@ -11,11 +11,8 @@ exposing a way of inserting records into the underlying database.
 
 ### Dependencies
 Python dependencies are specified within the `requirements.txt` and `requirements-dev.txt` files.
-In terms of binary dependencies, the project depends on a Golang / CLI tool called [jd][jd-github-repo].
-This tool is used to generate the differences (_diffs_) between consecutive versions of
-the [dialect-map-data][dialect-map-data] submodule data files
 
-In order to install the development packages, non-python dependencies and commit hooks:
+In order to install the development packages, as well as the defined commit hooks:
 ```sh
 make install-dev
 ```
@@ -58,6 +55,5 @@ This high level rule can be configured with the following env. variables
 [dialect-map-data]: https://github.com/dialect-map/dialect-map-data
 [dialect-map-io]: https://github.com/dialect-map/dialect-map-io
 [dialect-map-api]: https://github.com/dialect-map/dialect-map-private-api
-[jd-github-repo]: https://github.com/josephburnett/jd
 [main-module]: src/main.py
 [pytest-web]: https://docs.pytest.org/en/latest/#
