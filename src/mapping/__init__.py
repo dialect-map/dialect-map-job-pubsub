@@ -8,6 +8,7 @@ from .record_adapters import JargonAdapter
 from .record_adapters import JargonGroupAdapter
 
 from .record_mappers import BaseRecordMapper
+from .record_mappers import DummyRecordMapper
 from .record_mappers import FieldRecordMapper
 
 

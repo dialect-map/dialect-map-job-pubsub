@@ -23,6 +23,27 @@ class BaseRecordMapper(ABC):
         raise NotImplementedError()
 
 
+class DummyRecordMapper(BaseRecordMapper):
+    """ Dummy record type mapper """
+
+    def __init__(self, expected_type: str):
+        """
+        Initializes the dummy mapper
+        :param expected_type: mapped type to return
+        """
+
+        self.expected_type = expected_type
+
+    def infer_type(self, record: dict) -> str:
+        """
+        Infers the corresponding data model type from a given data record
+        :param record: data record to infer the type from
+        :return: corresponding model type
+        """
+
+        return self.expected_type
+
+
 class FieldRecordMapper(BaseRecordMapper):
     """ Field based record type mapper """
 
