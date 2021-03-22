@@ -10,7 +10,7 @@ from models import DataType
 
 
 class BaseRecordMapper(ABC):
-    """ Interface for data API route mapping classes """
+    """ Interface for data record type mapping classes """
 
     @abstractmethod
     def infer_type(self, record: dict) -> str:
@@ -23,17 +23,16 @@ class BaseRecordMapper(ABC):
         raise NotImplementedError()
 
 
-class PropertyRecordMapper(BaseRecordMapper):
-    """
-    Model type mapper that uses a certain data record property
+class DummyRecordMapper(BaseRecordMapper):
+    """ Dummy record type mapper """
 
-    Class attributes:
-        mappings: list of mappings between patterns and model types
-        property: field to be subject of the patterns
-    """
+    def __init__(self, expected_type: str):
+        """
+        Initializes the dummy mapper
+        :param expected_type: mapped type to return
+        """
 
-    mappings: List[DataType]
-    property: str
+        self.expected_type = expected_type
 
     def infer_type(self, record: dict) -> str:
         """
@@ -42,10 +41,33 @@ class PropertyRecordMapper(BaseRecordMapper):
         :return: corresponding model type
         """
 
-        value = record[self.property]
+        return self.expected_type
 
-        for mapping in self.mappings:
-            if re.match(mapping.regex, value):
-                return mapping.name
+
+class FieldRecordMapper(BaseRecordMapper):
+    """ Field based record type mapper """
+
+    def __init__(self, field: str, types: List[DataType]):
+        """
+        Initializes the mapper
+        :param field: field to apply the mapping patterns on
+        :param types: list of pattern mappable data types
+        """
+
+        self.field = field
+        self.types = types
+
+    def infer_type(self, record: dict) -> str:
+        """
+        Infers the corresponding data model type from a given data record
+        :param record: data record to infer the type from
+        :return: corresponding model type
+        """
+
+        value = record[self.field]
+
+        for data_type in self.types:
+            if re.match(data_type.regex, value):
+                return data_type.name
 
         raise ValueError(f"No corresponding type. Record: {record}")

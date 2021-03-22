@@ -5,3 +5,6 @@ from .api import DialectMapOperator
 
 from .pubsub import BasePubSubOperator
 from .pubsub import DiffPubSubOperator
+
+from .types import BaseTypeOperator
+from .types import DiffTypeOperator
