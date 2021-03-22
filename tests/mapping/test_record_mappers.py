@@ -3,7 +3,7 @@
 import pytest
 
 from src.mapping import BaseRecordMapper
-from src.mapping import PropertyRecordMapper
+from src.mapping import FieldRecordMapper
 from src.mapping import TYPE_CATEGORY
 from src.mapping import TYPE_JARGON
 from src.mapping import TYPE_GROUP
@@ -16,11 +16,7 @@ def mapper() -> BaseRecordMapper:
     :return: record mapper object
     """
 
-    mapper = PropertyRecordMapper()
-    mapper.mappings = [TYPE_CATEGORY, TYPE_JARGON, TYPE_GROUP]
-    mapper.property = "prop"
-
-    return mapper
+    return FieldRecordMapper("prop", [TYPE_CATEGORY, TYPE_JARGON, TYPE_GROUP])
 
 
 @pytest.mark.parametrize(
@@ -33,7 +29,7 @@ def mapper() -> BaseRecordMapper:
         ({"prop": "group-1-jargon-123"}, TYPE_JARGON.name),
     ],
 )
-def test_prop_mapper_infer(mapper: PropertyRecordMapper, sample: dict, expected: str):
+def test_prop_mapper_infer(mapper: FieldRecordMapper, sample: dict, expected: str):
     """
     Test the correct type mapping of valid samples
     :param mapper: record mapper object
@@ -53,7 +49,7 @@ def test_prop_mapper_infer(mapper: PropertyRecordMapper, sample: dict, expected:
         {"prop": "group-1-jargon-X"},
     ],
 )
-def test_prop_mapper_infer_invalid(mapper: PropertyRecordMapper, sample: dict):
+def test_prop_mapper_infer_invalid(mapper: FieldRecordMapper, sample: dict):
     """
     Test the correct exception raised when invalid samples
     :param mapper: record mapper object
