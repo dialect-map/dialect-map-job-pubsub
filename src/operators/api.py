@@ -7,8 +7,8 @@ from abc import abstractmethod
 from dialect_map_io import DialectMapAPI
 
 from mapping import select_adapter
+from mapping import select_route
 from mapping import BaseRecordMapper
-from .routes import select_route
 
 logger = logging.getLogger()
 
