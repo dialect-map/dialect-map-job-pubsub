@@ -43,7 +43,7 @@ def diff_operator() -> DiffMessageOperator:
     :return: initialized operator
     """
 
-    return DiffMessageOperator()
+    return DiffMessageOperator(propagated_fields=[])
 
 
 def test_operator_creation_record_objs(diff_operator: DiffMessageOperator):
@@ -57,7 +57,7 @@ def test_operator_creation_record_objs(diff_operator: DiffMessageOperator):
     holder_post = {"id": "example", "count": 5, "list": nested_post}
 
     diff = create_dummy_diff(prev, holder_post)
-    objs = diff_operator.get_msg_records(diff)
+    objs = diff_operator.get_default_records(diff)
 
     assert objs == [holder_post, *nested_post]
 
@@ -72,6 +72,6 @@ def test_operator_edition_record_objs(diff_operator: DiffMessageOperator):
     post = {"id": "example", "count": 5, "archived": True}
 
     diff = create_dummy_diff(prev, post)
-    objs = diff_operator.get_msg_records(diff)
+    objs = diff_operator.get_default_records(diff)
 
     assert objs == [DUMMY_DIFF_CONTAINER]

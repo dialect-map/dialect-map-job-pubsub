@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pytest
+from datetime import datetime
 
 from src.mapping import CategoryAdapter
 from src.mapping import JargonAdapter
@@ -10,7 +11,12 @@ from src.mapping import JargonGroupAdapter
 def test_category_adapter_valid():
     """ Test the adaptation of valid category samples """
 
-    sample = {"id": "example", "description": "example"}
+    sample = {
+        "id": "example",
+        "description": "example",
+        "created_at": datetime.utcnow(),
+    }
+
     record = CategoryAdapter().adapt_fields(sample)
     fields = record.keys()
 
@@ -33,6 +39,7 @@ def test_jargon_adapter_valid():
         "name": "name",
         "regex": "[Ee]xample",
         "archived": False,
+        "created_at": datetime.utcnow(),
     }
 
     record = JargonAdapter().adapt_fields(sample)
@@ -56,6 +63,7 @@ def test_jargon_adapter_invalid():
         "name": "name",
         "regex": "[Ee]xample",
         "archived": False,
+        "created_at": datetime.utcnow(),
     }
 
     assert pytest.raises(AssertionError, JargonAdapter().adapt_fields, sample)
@@ -69,6 +77,7 @@ def test_group_adapter_valid():
         "description": "example",
         "archived": False,
         "terms": [],
+        "created_at": datetime.utcnow(),
     }
 
     record = JargonGroupAdapter().adapt_fields(sample)
