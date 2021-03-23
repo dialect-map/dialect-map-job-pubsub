@@ -6,5 +6,5 @@ from .api import DialectMapOperator
 from .pubsub import BasePubSubOperator
 from .pubsub import DiffPubSubOperator
 
-from .types import BaseTypeOperator
-from .types import DiffTypeOperator
+from .message import BaseMessageOperator
+from .message import DiffMessageOperator

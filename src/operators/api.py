@@ -6,8 +6,8 @@ from abc import abstractmethod
 
 from dialect_map_io import DialectMapAPI
 
-from mapping import select_adapter
-from mapping import select_route
+from mapping import get_route
+from mapping import init_adapter
 from mapping import BaseRecordMapper
 
 logger = logging.getLogger()
@@ -93,8 +93,8 @@ class DialectMapOperator(BaseOperator):
 
         for message in messages:
             record_type = self.type_mapper.infer_type(message)
-            record_route = select_route(record_type)
-            record_adapt = select_adapter(record_type)
+            record_route = get_route(record_type)
+            record_adapt = init_adapter(record_type)
 
             data_obj = record_adapt.adapt_fields(message)
             created += self._create(record_route.api_path, data_obj)
@@ -112,7 +112,7 @@ class DialectMapOperator(BaseOperator):
 
         for message in messages:
             record_type = self.type_mapper.infer_type(message)
-            record_route = select_route(record_type)
+            record_route = get_route(record_type)
 
             archived += self._archive(record_route.api_path, message["id"])
 

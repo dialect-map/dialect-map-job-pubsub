@@ -23,6 +23,11 @@ ADAPTERS = {
     TYPE_JARGON.name: JargonAdapter,
 }
 
+TYPE_MAPPERS = {
+    FILE_CATEGORY.name: FieldRecordMapper,
+    FILE_JARGONS.name: FieldRecordMapper,
+}
+
 API_ROUTES = {
     TYPE_CATEGORY.name: CATEGORY_ROUTE,
     TYPE_GROUP.name: GROUP_ROUTE,
@@ -30,7 +35,20 @@ API_ROUTES = {
 }
 
 
-def select_adapter(type_name: str) -> BaseAdapter:
+def get_route(type_name: str) -> APIRoute:
+    """
+    Selects the corresponding API route given a data model type
+    :param type_name: name of the data model
+    :return: API route object
+    """
+
+    try:
+        return API_ROUTES[type_name]
+    except KeyError:
+        raise ValueError(f"Invalid model type: {type_name}")
+
+
+def init_adapter(type_name: str) -> BaseAdapter:
     """
     Selects the corresponding record adapter given a data model type
     :param type_name: name of the data model
@@ -45,14 +63,18 @@ def select_adapter(type_name: str) -> BaseAdapter:
         raise ValueError(f"Invalid model type: {type_name}")
 
 
-def select_route(type_name: str) -> APIRoute:
+def init_mapper(source_file: str, **kwargs) -> BaseRecordMapper:
     """
-    Selects the corresponding API route given a data model type
-    :param type_name: name of the data model
-    :return: API route object
+    Selects the corresponding type mapper given a source file
+    :param source_file: source file from where the diff comes
+    :return: type mapper
     """
 
     try:
-        return API_ROUTES[type_name]
+        mapper_cls = TYPE_MAPPERS[source_file]
+        mapper_obj = mapper_cls(**kwargs)  # type: ignore
+        return mapper_obj
     except KeyError:
-        raise ValueError(f"Invalid model type: {type_name}")
+        raise ValueError(f"Invalid source file: {source_file}")
+    except TypeError:
+        raise ValueError(f"Invalid keyword args: {kwargs}")
