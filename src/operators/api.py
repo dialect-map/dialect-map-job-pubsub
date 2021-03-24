@@ -3,117 +3,113 @@
 import logging
 from abc import ABC
 from abc import abstractmethod
+from typing import Dict
 
-from dialect_map_io import DialectMapAPI
+from dialect_map_io import APIRoute
+from dialect_map_io import RestOutputAPI
 
-from mapping import get_route
-from mapping import init_adapter
-from mapping import BaseRecordMapper
+from mapping import BaseAdapter
 
 logger = logging.getLogger()
 
 
-class BaseOperator(ABC):
+class BaseAPIOperator(ABC):
     """ Interface for the data object operator classes """
 
     @abstractmethod
-    def create_records(self, messages: list) -> int:
+    def create_record(self, record_data: dict, record_type: str):
         """
-        Transform received data-diff messages into DB records
-        :param messages: list of data-diff messages
-        :return: number of inserted records
+        Performs the creation of a record on a REST API
+        :param record_data: data record
+        :param record_type: data record type
         """
 
         raise NotImplementedError()
 
     @abstractmethod
-    def archive_records(self, messages: list) -> int:
+    def archive_record(self, record_data: dict, record_type: str):
         """
-        Transform received data-diff messages into archived DB records
-        :param messages: list of data-diff messages
-        :return: number of archived records
+        Performs the archival of a record on a REST API
+        :param record_data: data record
+        :param record_type: data record type
         """
 
         raise NotImplementedError()
 
 
-class DialectMapOperator(BaseOperator):
-    """ Class to operate on Dialect map data objects """
+class DialectMapOperator(BaseAPIOperator):
+    """ Class to operate on the Dialect map API """
 
-    def __init__(self, api_object: DialectMapAPI, type_mapper: BaseRecordMapper):
+    def __init__(
+        self,
+        api_object: RestOutputAPI,
+        api_routes: Dict[str, APIRoute],
+        adapters: Dict[str, BaseAdapter],
+    ):
         """
-        Initializes the Dialect map operator object
+        Initializes the Dialect map API operator object
         :param api_object: Dialect map API instantiated object
-        :param type_mapper: diff entries to data types mapper
+        :param api_routes: Dialect map API routes dictionary
+        :param adapters: data record adapters dictionary
         """
 
         self.api_object = api_object
-        self.type_mapper = type_mapper
+        self.api_routes = api_routes
+        self.adapters = adapters
 
-    def _create(self, api_path: str, record: dict) -> int:
+    def _create(self, api_path: str, record: dict) -> None:
         """
-        Creates a DB record returning the number of successful creations
+        Creates the given record on the specified API path
         :param api_path: API path to send the data
         :param record: data record to send
-        :return: 1 | 0
         """
 
         try:
             self.api_object.create_record(api_path, record)
-            return 1
         except Exception as error:
             logger.error(f"Cannot create record: {record}")
             logger.error(f"Error: {error}")
-            return 0
+            raise
 
-    def _archive(self, api_path: str, record_id: str) -> int:
+    def _archive(self, api_path: str, record_id: str) -> None:
         """
-        Archives a DB record returning the number of successful archival
+        Archives an existing record on the specified API path
         :param api_path: API path to patch
         :param record_id: record ID to patch
-        :return: 1 | 0
         """
 
         try:
             self.api_object.archive_record(f"{api_path}/{record_id}")
-            return 1
         except Exception as error:
             logger.error(f"Cannot archive record with ID: {record_id}")
             logger.error(f"Error: {error}")
-            return 0
+            raise
 
-    def create_records(self, messages: list) -> int:
+    def create_record(self, record_data: dict, record_type: str) -> None:
         """
-        Transform received data-diff messages into DB records
-        :param messages: list of data-diff messages
-        :return: number of inserted records
-        """
-
-        created = 0
-
-        for message in messages:
-            record_type = self.type_mapper.infer_type(message)
-            record_route = get_route(record_type)
-            record_adapt = init_adapter(record_type)
-
-            data_obj = record_adapt.adapt_fields(message)
-            created += self._create(record_route.api_path, data_obj)
-
-        return created
-
-    def archive_records(self, messages: list) -> int:
-        """
-        Transform received data-diff messages into archived DB records
-        :param messages: list of data-diff messages
-        :return: number of archived records
+        Performs the creation of a record on a REST API
+        :param record_data: data record
+        :param record_type: data record type
         """
 
-        archived = 0
+        record_route = self.api_routes[record_type]
+        record_adapt = self.adapters[record_type]
 
-        for message in messages:
-            record_type = self.type_mapper.infer_type(message)
-            record_route = get_route(record_type)
+        self._create(
+            record_route.api_path,
+            record_adapt.adapt_fields(record_data),
+        )
 
-            archived += self._archive(record_route.api_path, message["id"])
+    def archive_record(self, record_data: dict, record_type: str) -> None:
+        """
+        Performs the archival of a record on a REST API
+        :param record_data: data record
+        :param record_type: data record type
+        """
 
-        return archived
+        record_route = self.api_routes[record_type]
+
+        self._archive(
+            record_route.api_path,
+            record_data["id"],
+        )

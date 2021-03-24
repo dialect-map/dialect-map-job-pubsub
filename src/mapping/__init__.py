@@ -11,7 +11,6 @@ from .record_mappers import BaseRecordMapper
 from .record_mappers import DummyRecordMapper
 from .record_mappers import FieldRecordMapper
 
-from .record_routes import APIRoute
 from .record_routes import CATEGORY_ROUTE
 from .record_routes import GROUP_ROUTE
 from .record_routes import JARGON_ROUTE
@@ -33,19 +32,6 @@ API_ROUTES = {
     TYPE_GROUP.name: GROUP_ROUTE,
     TYPE_JARGON.name: JARGON_ROUTE,
 }
-
-
-def get_route(type_name: str) -> APIRoute:
-    """
-    Selects the corresponding API route given a data type name
-    :param type_name: name of the data type
-    :return: API route object
-    """
-
-    try:
-        return API_ROUTES[type_name]
-    except KeyError:
-        raise ValueError(f"Invalid model type: {type_name}")
 
 
 def init_adapter(type_name: str) -> BaseAdapter:

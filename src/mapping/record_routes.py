@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from dialect_map_io import APIRoute
 from dialect_map_io import DM_CATEGORY_ROUTE
 from dialect_map_io import DM_JARGON_ROUTE
 from dialect_map_io import DM_JARGON_GROUP_ROUTE
