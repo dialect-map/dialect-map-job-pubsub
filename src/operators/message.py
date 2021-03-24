@@ -84,9 +84,9 @@ class DiffMessageOperator(ABC):
         :return: record objects
         """
 
-        if message.is_creation():
+        if message.is_creation:
             return self._unfold_nested(message.value_post)
-        if message.is_edition():
+        if message.is_edition:
             return [message.container]
 
         raise ValueError("Invalid message structure")
