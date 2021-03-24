@@ -35,6 +35,12 @@ TYPE_JARGON = DataType(
     regex=re.compile(r"^group-\d+-jargon-\d+$"),
 )
 
+DATA_TYPES = [
+    TYPE_CATEGORY,
+    TYPE_GROUP,
+    TYPE_JARGON,
+]
+
 
 ##########################
 ####### Data files #######
@@ -49,3 +55,8 @@ FILE_JARGONS = DataFile(
     name="jargons.json",
     types=[TYPE_JARGON, TYPE_GROUP],
 )
+
+DATA_FILES = [
+    FILE_CATEGORY,
+    FILE_JARGONS,
+]
