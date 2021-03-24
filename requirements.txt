@@ -2,4 +2,4 @@
 click==7.1.2
 
 # Private packages
-git+ssh://git@github.com/dialect-map/dialect-map-io.git@v0.2.2#egg=dialect-map-io[gcp]
+git+ssh://git@github.com/dialect-map/dialect-map-io.git@v0.2.3#egg=dialect-map-io[gcp]
