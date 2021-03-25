@@ -1,23 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import re
-
 from abc import ABC
 from abc import abstractmethod
-from datetime import datetime
 
 
 class BaseAdapter(ABC):
     """ Interface for the data model adapter classes """
-
-    @property
-    def datetime_now(self) -> str:
-        """
-        Returns the current date-time in ISO format
-        :return: current date-time in ISO format
-        """
-
-        return datetime.now().isoformat(sep=" ", timespec="seconds")
 
     @abstractmethod
     def adapt_fields(self, values: dict) -> dict:
@@ -43,7 +32,7 @@ class CategoryAdapter(BaseAdapter):
         return {
             "category_id": values["id"],
             "description": values["description"],
-            "created_at": self.datetime_now,
+            "created_at": values["created_at"],
         }
 
 
@@ -78,7 +67,7 @@ class JargonAdapter(BaseAdapter):
             "jargon_str": values["name"],
             "jargon_regex": values["regex"],
             "archived": values["archived"],
-            "created_at": self.datetime_now,
+            "created_at": values["created_at"],
         }
 
 
@@ -96,5 +85,5 @@ class JargonGroupAdapter(BaseAdapter):
             "group_id": values["id"],
             "description": values["description"],
             "archived": values["archived"],
-            "created_at": self.datetime_now,
+            "created_at": values["created_at"],
         }

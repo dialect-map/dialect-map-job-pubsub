@@ -6,6 +6,10 @@ from .data_file import DataFile
 from .data_type import DataType
 
 
+##########################
+####### Data types #######
+##########################
+
 TYPE_CATEGORY = DataType(
     name="Category",
     regex=re.compile(
@@ -32,13 +36,16 @@ TYPE_JARGON = DataType(
 )
 
 
-DATA_FILES = [
-    DataFile(
-        name="categories.json",
-        types=[TYPE_CATEGORY],
-    ),
-    DataFile(
-        name="jargons.json",
-        types=[TYPE_JARGON, TYPE_GROUP],
-    ),
-]
+##########################
+####### Data files #######
+##########################
+
+FILE_CATEGORY = DataFile(
+    name="categories.json",
+    types=[TYPE_CATEGORY],
+)
+
+FILE_JARGONS = DataFile(
+    name="jargons.json",
+    types=[TYPE_JARGON, TYPE_GROUP],
+)

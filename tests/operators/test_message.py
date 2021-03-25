@@ -5,8 +5,7 @@ from datetime import datetime
 from typing import Any
 
 from dialect_map_io import DiffMessage
-from src.mapping import DummyRecordMapper
-from src.operators import DiffTypeOperator
+from src.operators import DiffMessageOperator
 
 
 DUMMY_DIFF_CONTAINER = {"id": "test"}
@@ -38,24 +37,16 @@ def create_dummy_diff(value_prev: Any, value_post: Any, source_file: str = "") -
 
 
 @pytest.fixture(scope="module")
-def diff_operator() -> DiffTypeOperator:
+def diff_operator() -> DiffMessageOperator:
     """
     Diff messages type operator
     :return: initialized operator
     """
 
-    dummy_mapper_a = DummyRecordMapper("type_A")
-    dummy_mapper_b = DummyRecordMapper("type_B")
-
-    return DiffTypeOperator(
-        {
-            "file_A.json": dummy_mapper_a,
-            "file_B.json": dummy_mapper_b,
-        }
-    )
+    return DiffMessageOperator(propagated_fields=[])
 
 
-def test_operator_creation_record_objs(diff_operator: DiffTypeOperator):
+def test_operator_creation_record_objs(diff_operator: DiffMessageOperator):
     """
     Tests the correct extraction of record objects from a creation diff
     :param diff_operator: initialized operator
@@ -66,12 +57,12 @@ def test_operator_creation_record_objs(diff_operator: DiffTypeOperator):
     holder_post = {"id": "example", "count": 5, "list": nested_post}
 
     diff = create_dummy_diff(prev, holder_post)
-    objs = diff_operator.get_record_objs(diff)
+    objs = diff_operator.get_default_records(diff)
 
     assert objs == [holder_post, *nested_post]
 
 
-def test_operator_edition_record_objs(diff_operator: DiffTypeOperator):
+def test_operator_edition_record_objs(diff_operator: DiffMessageOperator):
     """
     Tests the correct extraction of record objects from a edition diff
     :param diff_operator: initialized operator
@@ -81,20 +72,6 @@ def test_operator_edition_record_objs(diff_operator: DiffTypeOperator):
     post = {"id": "example", "count": 5, "archived": True}
 
     diff = create_dummy_diff(prev, post)
-    objs = diff_operator.get_record_objs(diff)
+    objs = diff_operator.get_default_records(diff)
 
     assert objs == [DUMMY_DIFF_CONTAINER]
-
-
-def test_operator_record_type(diff_operator: DiffTypeOperator):
-    """
-    Tests the correct extraction of record type from a diff
-    :param diff_operator: initialized operator
-    """
-
-    data = {"id": "example", "count": 5}
-    type_a = diff_operator.get_record_type(data, "file_A.json")
-    type_b = diff_operator.get_record_type(data, "file_B.json")
-
-    assert type_a == "type_A"
-    assert type_b == "type_B"
