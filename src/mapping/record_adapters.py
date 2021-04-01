@@ -64,7 +64,7 @@ class JargonAdapter(BaseAdapter):
         return {
             "group_id": group_id,
             "jargon_id": jargon_id,
-            "jargon_str": values["name"],
+            "jargon_term": values["name"],
             "jargon_regex": values["regex"],
             "archived": values["archived"],
             "created_at": values["created_at"],

@@ -46,7 +46,7 @@ def test_jargon_adapter_valid():
     fields = record.keys()
 
     assert "jargon_id" in fields
-    assert "jargon_str" in fields
+    assert "jargon_term" in fields
     assert "jargon_regex" in fields
     assert "group_id" in fields
     assert "archived" in fields
