@@ -11,19 +11,18 @@ from .record_mappers import BaseRecordMapper
 from .record_mappers import DummyRecordMapper
 from .record_mappers import FieldRecordMapper
 
-from .record_routes import APIRoute
 from .record_routes import CATEGORY_ROUTE
 from .record_routes import GROUP_ROUTE
 from .record_routes import JARGON_ROUTE
 
 
-ADAPTERS = {
+TYPE_ADAPTERS = {
     TYPE_CATEGORY.name: CategoryAdapter,
     TYPE_GROUP.name: JargonGroupAdapter,
     TYPE_JARGON.name: JargonAdapter,
 }
 
-TYPE_MAPPERS = {
+FILE_MAPPERS = {
     FILE_CATEGORY.name: FieldRecordMapper,
     FILE_JARGONS.name: FieldRecordMapper,
 }
@@ -35,28 +34,15 @@ API_ROUTES = {
 }
 
 
-def get_route(type_name: str) -> APIRoute:
-    """
-    Selects the corresponding API route given a data model type
-    :param type_name: name of the data model
-    :return: API route object
-    """
-
-    try:
-        return API_ROUTES[type_name]
-    except KeyError:
-        raise ValueError(f"Invalid model type: {type_name}")
-
-
 def init_adapter(type_name: str) -> BaseAdapter:
     """
-    Selects the corresponding record adapter given a data model type
-    :param type_name: name of the data model
+    Selects the corresponding record adapter given a data type name
+    :param type_name: name of the data type
     :return: record adapter
     """
 
     try:
-        adapter_cls = ADAPTERS[type_name]
+        adapter_cls = TYPE_ADAPTERS[type_name]
         adapter_obj = adapter_cls()  # type: ignore
         return adapter_obj
     except KeyError:
@@ -65,13 +51,13 @@ def init_adapter(type_name: str) -> BaseAdapter:
 
 def init_mapper(source_file: str, **kwargs) -> BaseRecordMapper:
     """
-    Selects the corresponding type mapper given a source file
+    Selects the corresponding file mapper given a source file
     :param source_file: source file from where the diff comes
-    :return: type mapper
+    :return: file mapper
     """
 
     try:
-        mapper_cls = TYPE_MAPPERS[source_file]
+        mapper_cls = FILE_MAPPERS[source_file]
         mapper_obj = mapper_cls(**kwargs)  # type: ignore
         return mapper_obj
     except KeyError:
