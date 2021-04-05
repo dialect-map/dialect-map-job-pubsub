@@ -55,6 +55,10 @@ def init_pubsub_operator(gcp_project: str, gcp_pubsub: str, key_path: str) -> Di
     """
 
     pubsub_auth = DefaultAuthenticator(key_path)
-    pubsub_reader = PubSubReader(gcp_project, gcp_pubsub, pubsub_auth)
+    pubsub_reader = PubSubReader(
+        project_id=gcp_project,
+        subscription=gcp_pubsub,
+        auth_ctl=pubsub_auth,
+    )
 
     return DiffPubSubOperator(pubsub_reader)
