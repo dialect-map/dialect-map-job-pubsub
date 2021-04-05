@@ -21,6 +21,7 @@ logger = logging.getLogger()
     "--api-url",
     envvar="DIALECT_MAP_API_URL",
     help="Private API base URL",
+    required=True,
     type=str,
 )
 @click.option(
@@ -28,6 +29,7 @@ logger = logging.getLogger()
     envvar="DIALECT_MAP_LOG_LEVEL",
     default="INFO",
     help="Log messages level",
+    required=False,
     type=str,
 )
 @click.pass_context
