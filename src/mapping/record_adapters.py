@@ -31,7 +31,7 @@ class CategoryAdapter(BaseAdapter):
 
         return {
             "category_id": values["id"],
-            "description": values["description"],
+            "description": values["name"],
             "created_at": values["created_at"],
         }
 
