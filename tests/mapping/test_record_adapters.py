@@ -12,8 +12,8 @@ def test_category_adapter_valid():
     """ Test the adaptation of valid category samples """
 
     sample = {
-        "id": "example",
-        "description": "example",
+        "id": "id.dummy",
+        "name": "example",
         "created_at": datetime.utcnow(),
     }
 
@@ -36,7 +36,7 @@ def test_jargon_adapter_valid():
 
     sample = {
         "id": "group-1-jargon-1",
-        "name": "name",
+        "name": "example",
         "regex": "[Ee]xample",
         "archived": False,
         "created_at": datetime.utcnow(),

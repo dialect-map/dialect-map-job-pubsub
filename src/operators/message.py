@@ -5,6 +5,7 @@ from abc import ABC
 from abc import abstractmethod
 from typing import Any
 from typing import List
+from typing import Set
 
 from dialect_map_io import DiffMessage
 
@@ -38,27 +39,27 @@ class BaseMessageOperator(ABC):
 class DiffMessageOperator(ABC):
     """ Message operator for the DiffMessage objects """
 
-    def __init__(self, propagated_fields: List[str] = None):
+    def __init__(self, propagated_fields: Set[str] = None):
         """
         Initializes the message operator with a list of fields to propagate
         :param propagated_fields: message fields to propagate to the records
         """
 
         if propagated_fields is None:
-            propagated_fields = ["created_at"]
+            propagated_fields = {"created_at"}
 
         self._check_msg_fields(propagated_fields)
         self.propagated_fields = propagated_fields
 
     @staticmethod
-    def _check_msg_fields(message_fields: List[str]) -> None:
+    def _check_msg_fields(message_fields: Set[str]) -> None:
         """
         Checks that the specified fields are present in the message
         :param message_fields: message fields to propagate to the records
         """
 
-        for field in message_fields:
-            _ = getattr(DiffMessage, field)
+        # Checks the provided fields are a subset
+        assert message_fields <= DiffMessage.fields()
 
     def _unfold_nested(self, val: Any) -> List[dict]:
         """

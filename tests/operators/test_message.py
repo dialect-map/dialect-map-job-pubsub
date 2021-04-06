@@ -43,7 +43,7 @@ def diff_operator() -> DiffMessageOperator:
     :return: initialized operator
     """
 
-    return DiffMessageOperator(propagated_fields=[])
+    return DiffMessageOperator()
 
 
 def test_operator_creation_record_objs(diff_operator: DiffMessageOperator):
