@@ -61,6 +61,20 @@ class DiffMessageOperator(ABC):
         # Checks the provided fields are a subset
         assert message_fields <= DiffMessage.fields()
 
+    @staticmethod
+    def _prune_nested(record: dict) -> dict:
+        """
+        Prunes every nested data structure out of a data record
+        :param record: data record to prune
+        :return: pruned data record
+        """
+
+        return {
+            key: val
+            for key, val in record.items()
+            if type(val) is not dict and type(val) is not list
+        }
+
     def _unfold_nested(self, val: Any) -> List[dict]:
         """
         Unfolds a nested containing message into its different records
@@ -86,7 +100,9 @@ class DiffMessageOperator(ABC):
         """
 
         if message.is_creation:
-            return self._unfold_nested(message.value_post)
+            records = self._unfold_nested(message.value_post)
+            records = [self._prune_nested(record) for record in records]
+            return records
         if message.is_edition:
             return [message.container]
 
