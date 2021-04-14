@@ -52,14 +52,17 @@ def test_operator_creation_record_objs(diff_operator: DiffMessageOperator):
     :param diff_operator: initialized operator
     """
 
-    prev = None
-    nested_post = [{"id": "A"}, {"id": "B"}]
-    holder_post = {"id": "example", "count": 5, "list": nested_post}
+    nested_values = [{"id": "A"}, {"id": "B"}]
+    nested_struct = {"list": nested_values}
+    holder_struct = {"id": "example", "count": 5}
 
-    diff = create_dummy_diff(prev, holder_post)
+    prev = None
+    post = {**holder_struct, **nested_struct}
+
+    diff = create_dummy_diff(prev, post)
     objs = diff_operator.get_default_records(diff)
 
-    assert objs == [holder_post, *nested_post]
+    assert objs == [holder_struct, *nested_values]
 
 
 def test_operator_edition_record_objs(diff_operator: DiffMessageOperator):
