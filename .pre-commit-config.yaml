@@ -2,7 +2,7 @@ fail_fast: true
 
 repos:
 -   repo: https://github.com/psf/black
-    rev: 20.8b1
+    rev: 21.4b0
     hooks:
     -   id: black
         name: "Black format checker"
@@ -13,7 +13,7 @@ repos:
     rev: v0.800
     hooks:
     -   id: mypy
-        name: "Python types analyzer"
+        name: "Python types analyzer (source)"
         args: ["--allow-redefinition", "--ignore-missing-imports", "--cache-dir=/dev/null", "src"]
         language: python
         pass_filenames: false
