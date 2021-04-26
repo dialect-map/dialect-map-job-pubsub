@@ -9,7 +9,7 @@ from src.mapping import JargonGroupAdapter
 
 
 def test_category_adapter_valid():
-    """ Test the adaptation of valid category samples """
+    """Test the adaptation of valid category samples"""
 
     sample = {
         "id": "id.dummy",
@@ -26,13 +26,13 @@ def test_category_adapter_valid():
 
 
 def test_category_adapter_invalid():
-    """ Test the adaptation of invalid category samples """
+    """Test the adaptation of invalid category samples"""
 
     assert pytest.raises(KeyError, CategoryAdapter().adapt_fields, {})
 
 
 def test_jargon_adapter_valid():
-    """ Test the adaptation of valid jargon samples """
+    """Test the adaptation of valid jargon samples"""
 
     sample = {
         "id": "group-1-jargon-1",
@@ -56,7 +56,7 @@ def test_jargon_adapter_valid():
 
 
 def test_jargon_adapter_invalid():
-    """ Test the adaptation of invalid jargon samples """
+    """Test the adaptation of invalid jargon samples"""
 
     sample = {
         "id": "wrong-id",
@@ -70,7 +70,7 @@ def test_jargon_adapter_invalid():
 
 
 def test_group_adapter_valid():
-    """ Test the adaptation of valid jargon group samples """
+    """Test the adaptation of valid jargon group samples"""
 
     sample = {
         "id": "group-1",
@@ -90,6 +90,6 @@ def test_group_adapter_valid():
 
 
 def test_group_adapter_invalid():
-    """ Test the adaptation of invalid jargon samples """
+    """Test the adaptation of invalid jargon samples"""
 
     assert pytest.raises(KeyError, JargonGroupAdapter().adapt_fields, {})
