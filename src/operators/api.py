@@ -14,7 +14,7 @@ logger = logging.getLogger()
 
 
 class BaseAPIOperator(ABC):
-    """ Interface for the data object operator classes """
+    """Interface for the data object operator classes"""
 
     @abstractmethod
     def create_record(self, record_data: dict, record_type: str):
@@ -38,7 +38,7 @@ class BaseAPIOperator(ABC):
 
 
 class DialectMapOperator(BaseAPIOperator):
-    """ Class to operate on the Dialect map API """
+    """Class to operate on the Dialect map API"""
 
     def __init__(
         self,

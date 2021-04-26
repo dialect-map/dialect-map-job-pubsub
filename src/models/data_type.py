@@ -18,7 +18,7 @@ class DataType:
     regex: Pattern
 
     def __post_init__(self):
-        """ Post-init trigger to check regex correctness """
+        """Post-init trigger to check regex correctness"""
 
         assert self.regex.pattern.startswith("^")
         assert self.regex.pattern.endswith("$")

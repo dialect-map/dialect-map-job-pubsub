@@ -6,7 +6,7 @@ from abc import abstractmethod
 
 
 class BaseAdapter(ABC):
-    """ Interface for the data model adapter classes """
+    """Interface for the data model adapter classes"""
 
     @abstractmethod
     def adapt_fields(self, values: dict) -> dict:
@@ -20,7 +20,7 @@ class BaseAdapter(ABC):
 
 
 class CategoryAdapter(BaseAdapter):
-    """ Category data model adapter class """
+    """Category data model adapter class"""
 
     def adapt_fields(self, values: dict) -> dict:
         """
@@ -37,7 +37,7 @@ class CategoryAdapter(BaseAdapter):
 
 
 class JargonAdapter(BaseAdapter):
-    """ Jargon data model adapter class """
+    """Jargon data model adapter class"""
 
     @staticmethod
     def extract_group_id(jargon_id: str) -> str:
@@ -86,7 +86,7 @@ class JargonAdapter(BaseAdapter):
 
 
 class JargonGroupAdapter(BaseAdapter):
-    """ Jargon data model adapter class """
+    """Jargon data model adapter class"""
 
     def adapt_fields(self, values: dict) -> dict:
         """

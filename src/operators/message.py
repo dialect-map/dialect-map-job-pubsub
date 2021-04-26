@@ -13,7 +13,7 @@ logger = logging.getLogger()
 
 
 class BaseMessageOperator(ABC):
-    """ Interface for the data types operator classes """
+    """Interface for the data types operator classes"""
 
     @abstractmethod
     def get_default_records(self, message: DiffMessage) -> List[dict]:
@@ -37,7 +37,7 @@ class BaseMessageOperator(ABC):
 
 
 class DiffMessageOperator(ABC):
-    """ Message operator for the DiffMessage objects """
+    """Message operator for the DiffMessage objects"""
 
     def __init__(self, propagated_fields: Set[str] = None):
         """

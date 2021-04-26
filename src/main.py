@@ -34,7 +34,7 @@ logger = logging.getLogger()
 )
 @click.pass_context
 def main(context: Context, api_url: str, log_level: str):
-    """ Default command group for the jobs """
+    """Default command group for the jobs"""
 
     setup_logger(log_level)
 

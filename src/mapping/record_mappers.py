@@ -10,7 +10,7 @@ from models import DataType
 
 
 class BaseRecordMapper(ABC):
-    """ Interface for data record type mapping classes """
+    """Interface for data record type mapping classes"""
 
     @abstractmethod
     def infer_type(self, record: dict) -> str:
@@ -24,7 +24,7 @@ class BaseRecordMapper(ABC):
 
 
 class DummyRecordMapper(BaseRecordMapper):
-    """ Dummy record type mapper """
+    """Dummy record type mapper"""
 
     def __init__(self, expected_type: str):
         """
@@ -45,7 +45,7 @@ class DummyRecordMapper(BaseRecordMapper):
 
 
 class FieldRecordMapper(BaseRecordMapper):
-    """ Field based record type mapper """
+    """Field based record type mapper"""
 
     def __init__(self, field: str, types: List[DataType]):
         """

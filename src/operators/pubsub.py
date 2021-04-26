@@ -14,7 +14,7 @@ logger = logging.getLogger()
 
 
 class BasePubSubOperator(ABC):
-    """ Interface for the Pub/Sub operator classes """
+    """Interface for the Pub/Sub operator classes"""
 
     @property
     @abstractmethod
@@ -38,7 +38,7 @@ class BasePubSubOperator(ABC):
 
 
 class DiffPubSubOperator(ABC):
-    """ Pub/Sub operator for the data diff messages """
+    """Pub/Sub operator for the data diff messages"""
 
     def __init__(self, reader: PubSubReader, parser: BaseDataParser = None):
         """
