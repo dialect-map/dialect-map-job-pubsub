@@ -12,17 +12,7 @@ from .data_type import DataType
 
 TYPE_CATEGORY = DataType(
     name="Category",
-    regex=re.compile(
-        r"^"
-        r"("
-        r"(astro)|(cond)|(cs)|(econ)|(eess)|(gr)|(hep)|"
-        r"(math)|(nlin)|(nucl)|(physics)|(q)|(quant)|(stat)"
-        r")"
-        r"(-\w+)?"
-        r"(\.\w+)?"
-        r"(-\w+)?"
-        r"$"
-    ),
+    regex=re.compile(r"^\w+(-\w+)?(\.\w+)?(-\w+)?$"),
 )
 
 TYPE_GROUP = DataType(
