@@ -14,6 +14,7 @@ def test_category_adapter_valid():
     sample = {
         "id": "id.dummy",
         "name": "example",
+        "archived": False,
         "created_at": datetime.utcnow(),
     }
 
@@ -22,6 +23,7 @@ def test_category_adapter_valid():
 
     assert "category_id" in fields
     assert "description" in fields
+    assert "archived" in fields
     assert "created_at" in fields
 
 
