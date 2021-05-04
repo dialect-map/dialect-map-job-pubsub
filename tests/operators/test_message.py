@@ -4,7 +4,7 @@ import pytest
 from datetime import datetime
 from typing import Any
 
-from dialect_map_io import DiffMessage
+from dialect_map_gcp import DiffMessage
 from src.operators import DiffMessageOperator
 
 
