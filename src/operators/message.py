@@ -7,7 +7,7 @@ from typing import Any
 from typing import List
 from typing import Set
 
-from dialect_map_io import DiffMessage
+from dialect_map_gcp import DiffMessage
 
 logger = logging.getLogger()
 

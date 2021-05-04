@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from dialect_map_io.auth import DefaultAuthenticator
-from dialect_map_io.auth import OpenIDAuthenticator
-from dialect_map_io.data_input import PubSubReader
+from dialect_map_gcp.auth import DefaultAuthenticator
+from dialect_map_gcp.auth import OpenIDAuthenticator
+from dialect_map_gcp.data_input import PubSubReader
 from dialect_map_io.data_output import RestOutputAPI
 
 from mapping import API_ROUTES
