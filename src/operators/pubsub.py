@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import logging
+
 from abc import ABC
 from abc import abstractmethod
 from typing import List
 
+from dialect_map_gcp import DiffMessage
+from dialect_map_gcp import PubSubReader
 from dialect_map_io import BaseDataParser
 from dialect_map_io import JSONDataParser
-from dialect_map_io import PubSubReader
-from dialect_map_io import DiffMessage
 
 logger = logging.getLogger()
 
