@@ -38,9 +38,9 @@ def main(context: Context, api_url: str, log_level: str):
 
     setup_logger(log_level)
 
-    context.ensure_object(dict)
-    context.obj["API_URL"] = api_url
-    context.obj["LOG_LEVEL"] = log_level
+    params = context.ensure_object(dict)
+    params["API_URL"] = api_url
+    params["LOG_LEVEL"] = log_level
 
 
 @main.command()
@@ -72,7 +72,8 @@ def pubsub_job(context: Context, gcp_project: str, gcp_pubsub: str, gcp_key_path
     Ref: dialect_map_io.models.pubsub.DiffMessage
     """
 
-    api_url = context.obj["API_URL"]
+    params = context.ensure_object(dict)
+    api_url = params["API_URL"]
 
     pub_ctl = init_pubsub_operator(gcp_project, gcp_pubsub, gcp_key_path)
     api_ctl = init_api_operator(api_url, gcp_key_path)
@@ -127,4 +128,4 @@ def dispatch_records(api: BaseAPIOperator, mapper: BaseRecordMapper, message) ->
 
 
 if __name__ == "__main__":
-    main(obj={})
+    main()
