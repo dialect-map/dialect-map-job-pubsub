@@ -2,9 +2,8 @@
 
 import pytest
 from datetime import datetime
-from typing import Any
-
 from dialect_map_gcp import DiffMessage
+
 from src.operators import DiffMessageOperator
 
 
@@ -14,7 +13,7 @@ DUMMY_DIFF_SOURCE_FILE = "file.json"
 DUMMY_DIFF_CREATED_AT = datetime.utcnow()
 
 
-def create_dummy_diff(value_prev: Any, value_post: Any, source_file: str = "") -> DiffMessage:
+def create_dummy_diff(value_prev: object, value_post: object, source_file: str = "") -> DiffMessage:
     """
     Creates a dummy DiffMessage to use during the tests
     :param value_prev: diff previous value

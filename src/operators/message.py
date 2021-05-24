@@ -3,7 +3,6 @@
 import logging
 from abc import ABC
 from abc import abstractmethod
-from typing import Any
 from typing import List
 from typing import Set
 
@@ -75,20 +74,20 @@ class DiffMessageOperator(ABC):
             if type(val) is not dict and type(val) is not list
         }
 
-    def _unfold_nested(self, val: Any) -> List[dict]:
+    def _unfold_nested(self, obj: object) -> List[dict]:
         """
         Unfolds a nested containing message into its different records
-        :param val: nested message value
+        :param obj: nested message object
         :return: list of nested records
         """
 
         records = []
 
-        if type(val) is dict:
-            records += [val]
-            records += [obj for elem in val.values() for obj in self._unfold_nested(elem)]
-        if type(val) is list:
-            records += [obj for elem in val for obj in self._unfold_nested(elem)]
+        if isinstance(obj, dict):
+            records += [obj]
+            records += [val for elem in obj.values() for val in self._unfold_nested(elem)]
+        if isinstance(obj, list):
+            records += [val for elem in obj for val in self._unfold_nested(elem)]
 
         return records
 
