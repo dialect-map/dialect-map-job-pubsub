@@ -4,6 +4,7 @@ import click
 import logging
 
 from click import Context
+from click import Path
 
 from logs import setup_logger
 from mapping import BaseRecordMapper
@@ -60,7 +61,11 @@ def main(context: Context, api_url: str, log_level: str):
     "--gcp-key-path",
     help="GCP Service Account key path",
     required=True,
-    type=str,
+    type=Path(
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+    ),
 )
 @click.pass_context
 def pubsub_job(context: Context, gcp_project: str, gcp_pubsub: str, gcp_key_path: str):
