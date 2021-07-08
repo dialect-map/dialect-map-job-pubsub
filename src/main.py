@@ -86,7 +86,7 @@ def pubsub_job(context: Context, gcp_project: str, gcp_pubsub: str, gcp_key_path
 
     while True:
         logger.info(f"Reading messages from subscription: {gcp_pubsub}")
-        messages = pub_ctl.read_messages(10)
+        messages = pub_ctl.get_messages(10)
 
         if len(messages) == 0:
             logger.info("No more Pub/Sub messages")

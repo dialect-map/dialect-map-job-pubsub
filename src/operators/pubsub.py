@@ -38,7 +38,7 @@ class BasePubSubOperator(ABC):
         raise NotImplementedError()
 
 
-class DiffPubSubOperator(ABC):
+class DiffPubSubOperator(BasePubSubOperator):
     """Pub/Sub operator for the data diff messages"""
 
     def __init__(self, reader: PubSubReader, parser: BaseDataParser = None):
@@ -97,7 +97,7 @@ class DiffPubSubOperator(ABC):
         else:
             return data_diff
 
-    def read_messages(self, num_messages: int) -> List[DiffMessage]:
+    def get_messages(self, num_messages: int) -> List[DiffMessage]:
         """
         Retrieve messages from a Pub/Sub subscription and decode them as objects
         :param num_messages: maximum number of messages to retrieve
