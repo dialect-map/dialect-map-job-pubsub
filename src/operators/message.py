@@ -35,7 +35,7 @@ class BaseMessageOperator(ABC):
         raise NotImplementedError()
 
 
-class DiffMessageOperator(ABC):
+class DiffMessageOperator(BaseMessageOperator):
     """Message operator for the DiffMessage objects"""
 
     def __init__(self, propagated_fields: Set[str] = None):
