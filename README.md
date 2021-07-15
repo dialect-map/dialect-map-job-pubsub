@@ -4,9 +4,9 @@
 This repository contains the data-ingestion job to propagate _static_ data to the database.
 The _static_ term makes reference to the [Dialect map data][dialect-map-data] slow change pace.
 
-It will be used in combination with the [Dialect map IO][dialect-map-io] package, which provides the file parsing
-and API connection capabilities, as well as the [Dialect map private API][dialect-map-api], which is the component
-exposing a way of inserting records into the underlying database.
+It relies on [Dialect map IO][dialect-map-io], which provides PubSub / API connection capabilities,
+and [Dialect map schemas][dialect-map-schemas], which provides data (de)serialization capabilities,
+in order to send validated records to the [Dialect map private API][dialect-map-private-api] component.
 
 
 ### Dependencies
@@ -19,7 +19,7 @@ make install-dev
 
 
 ### Formatting
-All Python files are formatted using [Black][black-web], and the custom properties defined
+All Python files are formatted using [Black][web-black], and the custom properties defined
 in the `pyproject.toml` file.
 ```sh
 make check
@@ -27,7 +27,7 @@ make check
 
 
 ### Testing
-Project testing is performed using [Pytest][pytest-web]. In order to run the tests:
+Project testing is performed using [Pytest][web-pytest]. In order to run the tests:
 ```sh
 make test
 ```
@@ -60,11 +60,11 @@ The command arguments are:
 | --gcp-key-path | -                      | -                | Yes      | GCP Service account key path             |
 
 
-
-[black-web]: https://black.readthedocs.io/en/stable/
 [dialect-map-data]: https://github.com/dialect-map/dialect-map-data
 [dialect-map-io]: https://github.com/dialect-map/dialect-map-io
-[dialect-map-api]: https://github.com/dialect-map/dialect-map-private-api
+[dialect-map-private-api]: https://github.com/dialect-map/dialect-map-private-api
+[dialect-map-schemas]: https://github.com/dialect-map/dialect-map-schemas
 [google-pub-sub]: https://cloud.google.com/pubsub/docs/overview
 [main-module]: src/main.py
-[pytest-web]: https://docs.pytest.org/en/latest/#
+[web-black]: https://black.readthedocs.io/en/stable/
+[web-pytest]: https://docs.pytest.org/en/latest/#
