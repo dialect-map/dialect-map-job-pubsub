@@ -8,9 +8,8 @@ from click import Path
 
 from logs import setup_logger
 from mapping import BaseRecordMapper
-from operators import BaseAPIOperator
-from operators import DiffMessageOperator
-from utils import init_all_mappers
+from mapping import init_all_mappers
+from output import BaseAPIOperator
 from utils import init_api_operator
 from utils import init_pubsub_operator
 
@@ -74,7 +73,7 @@ def pubsub_job(context: Context, gcp_project: str, gcp_pubsub: str, gcp_key_path
     Stops when no more messages are read.
 
     The pipeline expects to receive DiffMessage object parsable messages.
-    Ref: dialect_map_io.models.pubsub.DiffMessage
+    Ref: dialect_map_gcp.models.message.DiffMessage
     """
 
     params = context.ensure_object(dict)
@@ -82,7 +81,7 @@ def pubsub_job(context: Context, gcp_project: str, gcp_pubsub: str, gcp_key_path
 
     pub_ctl = init_pubsub_operator(gcp_project, gcp_pubsub, gcp_key_path)
     api_ctl = init_api_operator(api_url, gcp_key_path)
-    mappers = init_all_mappers(mapped_field="id")
+    mappers = init_all_mappers()
 
     while True:
         logger.info(f"Reading messages from subscription: {gcp_pubsub}")
@@ -95,41 +94,32 @@ def pubsub_job(context: Context, gcp_project: str, gcp_pubsub: str, gcp_key_path
             break
 
         for message in messages:
-            mapper = mappers[message.source_file]
-            dispatch_records(api_ctl, mapper, message)
+            try:
+                mapper = mappers[message.source_file]
+                dispatch_record(api_ctl, mapper, message)
+            except Exception as error:
+                logger.error(f"Dispatch process stopped: {error}")
+                break
 
 
-def dispatch_records(api: BaseAPIOperator, mapper: BaseRecordMapper, message) -> None:
+def dispatch_record(api: BaseAPIOperator, mapper: BaseRecordMapper, message) -> None:
     """
-    Dispatch message records using the provided API operator
+    Dispatch message inner data record using the provided API operator
     :param api: Dialect map API operator
     :param mapper: diff message records mapper
     :param message: diff message to dispatch
     """
 
-    msg_ctl = DiffMessageOperator()
-    records = msg_ctl.get_enriched_records(message)
+    record_data = message.record
+    record_route = mapper.infer_route(record_data)
 
-    num_created = 0
-    num_archived = 0
+    if message.is_creation:
+        api.create_record(record_data, record_route)
+        logger.info(f"Created record: {record_route}")
 
-    for record in records:
-        try:
-            record_type = mapper.infer_type(record)
-
-            if message.is_creation:
-                api.create_record(record, record_type)
-                num_created += 1
-            if message.is_edition:
-                api.archive_record(record, record_type)
-                num_archived += 1
-
-        except Exception as error:
-            logger.error(f"Dispatch process stopped: {error}")
-            break
-
-    logger.info(f"Number of created records: {num_created}")
-    logger.info(f"Number of archived records: {num_archived}")
+    if message.is_edition:
+        api.archive_record(record_data, record_route)
+        logger.info(f"Archived record: {record_route}")
 
 
 if __name__ == "__main__":

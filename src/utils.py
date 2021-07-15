@@ -5,29 +5,8 @@ from dialect_map_gcp.auth import OpenIDAuthenticator
 from dialect_map_gcp.data_input import PubSubReader
 from dialect_map_io.data_output import RestOutputAPI
 
-from mapping import API_ROUTES
-from mapping import init_adapter
-from mapping import init_mapper
-from models import DATA_FILES
-from models import DATA_TYPES
-from operators import DialectMapOperator
-from operators import DiffPubSubOperator
-
-
-def init_all_mappers(mapped_field: str) -> dict:
-    """
-    Initializes all data file mappers
-    :param mapped_field: field to use when inferring the type
-    :return: dictionary file - mapper
-    """
-
-    mappers = {}
-
-    for f in DATA_FILES:
-        extra_args = {"field": mapped_field, "types": f.types}
-        mappers[f.name] = init_mapper(f.name, **extra_args)
-
-    return mappers
+from input import DiffPubSubOperator
+from output import DialectMapOperator
 
 
 def init_api_operator(api_url: str, key_path: str) -> DialectMapOperator:
@@ -40,9 +19,8 @@ def init_api_operator(api_url: str, key_path: str) -> DialectMapOperator:
 
     api_auth = OpenIDAuthenticator(key_path, api_url)
     api_conn = RestOutputAPI(api_url, api_auth)
-    adapters = {t.name: init_adapter(t.name) for t in DATA_TYPES}
 
-    return DialectMapOperator(api_conn, API_ROUTES, adapters)
+    return DialectMapOperator(api_conn)
 
 
 def init_pubsub_operator(gcp_project: str, gcp_pubsub: str, key_path: str) -> DiffPubSubOperator:

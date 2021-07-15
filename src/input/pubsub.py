@@ -17,15 +17,7 @@ logger = logging.getLogger()
 class BasePubSubOperator(ABC):
     """Interface for the Pub/Sub operator classes"""
 
-    @property
-    @abstractmethod
-    def msg_type(self) -> str:
-        """
-        Message type the operator is going to deserialize
-        :return: type name
-        """
-
-        raise NotImplementedError()
+    msg_type: str
 
     @abstractmethod
     def get_messages(self, num_messages: int) -> List[object]:
@@ -41,6 +33,8 @@ class BasePubSubOperator(ABC):
 class DiffPubSubOperator(BasePubSubOperator):
     """Pub/Sub operator for the data diff messages"""
 
+    msg_type = "data-diff"
+
     def __init__(self, reader: PubSubReader, parser: BaseDataParser = None):
         """
         Initializes the Pub/Sub operator with a given parser and reader
@@ -53,15 +47,6 @@ class DiffPubSubOperator(BasePubSubOperator):
 
         self.reader = reader
         self.parser = parser
-
-    @property
-    def msg_type(self) -> str:
-        """
-        Message type the operator is going to decode
-        :return: type name
-        """
-
-        return "data-diff"
 
     def _check_data_type(self, metadata: dict) -> bool:
         """
