@@ -48,14 +48,16 @@ class DiffPubSubOperator(BasePubSubOperator):
         self.reader = reader
         self.parser = parser
 
-    def _check_data_type(self, metadata: dict) -> bool:
+    def _check_message_type(self, message_id: str, message_meta: dict) -> None:
         """
         Checks whether the message metadata type matches the desired one
-        :param metadata: dictionary of custom keyword attributes
-        :return: whether is a desired data type
+        :param message_id: message unique identifier
+        :param message_meta: message custom attributes
         """
 
-        return metadata["msgType"] == self.msg_type
+        if not message_meta["msgType"] == self.msg_type:
+            logger.warning(f"Unexpected type. Ignoring message: {message_id}")
+            raise TypeError(f"Unexpected type")
 
     def _parse_message(self, message: object) -> DiffMessage:
         """
@@ -68,9 +70,7 @@ class DiffPubSubOperator(BasePubSubOperator):
         msg_data = self.reader.get_message_data(message)
         msg_meta = self.reader.get_message_metadata(message)
 
-        if not self._check_data_type(msg_meta):
-            logger.warning(f"Unexpected type. Ignoring message: {msg_id}")
-            raise TypeError(f"Unexpected type")
+        self._check_message_type(msg_id, msg_meta)
 
         try:
             data_dict = self.parser.parse_bytes(msg_data)
