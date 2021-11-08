@@ -5,8 +5,8 @@ from dialect_map_gcp.auth import OpenIDAuthenticator
 from dialect_map_gcp.data_input import PubSubReader
 from dialect_map_io.data_output import RestOutputAPI
 
-from input import DiffPubSubOperator
-from output import DialectMapOperator
+from job.input import DiffPubSubOperator
+from job.output import DialectMapOperator
 
 
 def init_api_operator(api_url: str, key_path: str) -> DialectMapOperator:
