@@ -6,10 +6,10 @@ import logging
 from click import Context
 from click import Path
 
+from job.mapping import BaseRecordMapper
+from job.mapping import init_all_mappers
+from job.output import BaseAPIOperator
 from logs import setup_logger
-from mapping import BaseRecordMapper
-from mapping import init_all_mappers
-from output import BaseAPIOperator
 from utils import init_api_operator
 from utils import init_pubsub_operator
 
