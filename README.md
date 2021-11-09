@@ -49,7 +49,6 @@ The top-level options are:
 
 | OPTION         | ENV VARIABLE           | DEFAULT          | REQUIRED | DESCRIPTION                              |
 |----------------|------------------------|------------------|----------|------------------------------------------|
-| --api-url      | DIALECT_MAP_API_URL    | -                | Yes      | Private API base URL                     |
 | --log-level    | DIALECT_MAP_LOG_LEVEL  | INFO             | No       | Log messages level                       |
 
 
@@ -64,6 +63,7 @@ The command arguments are:
 | --gcp-project  | -                      | -                | Yes      | GCP project name                         |
 | --gcp-pubsub   | -                      | -                | Yes      | GCP Pub/Sub subscription name            |
 | --gcp-key-path | -                      | -                | Yes      | GCP Service account key path             |
+| --api-url      | -                      | -                | Yes      | Private API base URL                     |
 
 
 [ci-status-badge]: https://github.com/dialect-map/dialect-map-job-static/actions/workflows/ci.yml/badge.svg?branch=main

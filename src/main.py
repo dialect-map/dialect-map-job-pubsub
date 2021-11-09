@@ -18,13 +18,6 @@ logger = logging.getLogger()
 
 @click.group()
 @click.option(
-    "--api-url",
-    envvar="DIALECT_MAP_API_URL",
-    help="Private API base URL",
-    required=True,
-    type=str,
-)
-@click.option(
     "--log-level",
     envvar="DIALECT_MAP_LOG_LEVEL",
     default="INFO",
@@ -33,13 +26,12 @@ logger = logging.getLogger()
     type=str,
 )
 @click.pass_context
-def main(context: Context, api_url: str, log_level: str):
+def main(context: Context, log_level: str):
     """Default command group for the jobs"""
 
     setup_logger(log_level)
 
     params = context.ensure_object(dict)
-    params["API_URL"] = api_url
     params["LOG_LEVEL"] = log_level
 
 
@@ -66,8 +58,13 @@ def main(context: Context, api_url: str, log_level: str):
         dir_okay=False,
     ),
 )
-@click.pass_context
-def pubsub_job(context: Context, gcp_project: str, gcp_pubsub: str, gcp_key_path: str):
+@click.option(
+    "--api-url",
+    help="Private API base URL",
+    required=True,
+    type=str,
+)
+def pubsub_job(gcp_project: str, gcp_pubsub: str, gcp_key_path: str, api_url: str):
     """
     Starts a data ingestion job reading messages from Google Pub/sub.
     Stops when no more messages are read.
@@ -75,9 +72,6 @@ def pubsub_job(context: Context, gcp_project: str, gcp_pubsub: str, gcp_key_path
     The pipeline expects to receive DiffMessage object parsable messages.
     Ref: dialect_map_gcp.models.message.DiffMessage
     """
-
-    params = context.ensure_object(dict)
-    api_url = params["API_URL"]
 
     pub_ctl = init_pubsub_operator(gcp_project, gcp_pubsub, gcp_key_path)
     api_ctl = init_api_operator(api_url, gcp_key_path)
