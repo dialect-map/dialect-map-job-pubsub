@@ -20,6 +20,12 @@ class BasePubSubOperator(ABC):
     msg_type: str
 
     @abstractmethod
+    def close(self) -> None:
+        """Closes the Pub/Sub connection"""
+
+        raise NotImplementedError()
+
+    @abstractmethod
     def get_messages(self, num_messages: int) -> List[object]:
         """
         Retrieve messages from a Pub/Sub subscription and decode them as objects
@@ -81,6 +87,11 @@ class DiffPubSubOperator(BasePubSubOperator):
             raise ValueError()
         else:
             return data_diff
+
+    def close(self) -> None:
+        """Closes the Pub/Sub connection"""
+
+        self.reader.close()
 
     def get_messages(self, num_messages: int) -> List[DiffMessage]:
         """
