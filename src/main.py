@@ -6,12 +6,19 @@ import logging
 from click import Context
 from click import Path
 
-from job.mapping import BaseRecordMapper
-from job.mapping import init_all_mappers
-from job.output import BaseAPIOperator
+from dialect_map_gcp.auth import DefaultAuthenticator
+from dialect_map_gcp.auth import OpenIDAuthenticator
+from dialect_map_gcp.data_input import PubSubReader
+from dialect_map_io.data_output import RestOutputAPI
+
+from job.input import DiffPubSubOperator
+from job.mapping import SchemaRecordMapper
+from job.mapping import CATEGORY_ROUTE
+from job.mapping import GROUP_ROUTE
+from job.mapping import JARGON_ROUTE
+from job.output import DialectMapOperator
 from logs import setup_logger
-from utils import init_api_operator
-from utils import init_pubsub_operator
+from pipes import PubSubPipeline
 
 logger = logging.getLogger()
 
@@ -73,47 +80,25 @@ def pubsub_job(gcp_project: str, gcp_pubsub: str, gcp_key_path: str, api_url: st
     Ref: dialect_map_gcp.models.message.DiffMessage
     """
 
-    pub_ctl = init_pubsub_operator(gcp_project, gcp_pubsub, gcp_key_path)
-    api_ctl = init_api_operator(api_url, gcp_key_path)
-    mappers = init_all_mappers()
+    # Initialize the Pub/Sub controller
+    pubsub_auth = DefaultAuthenticator(gcp_key_path)
+    pubsub_reader = PubSubReader(
+        project_id=gcp_project,
+        subscription=gcp_pubsub,
+        auth_ctl=pubsub_auth,
+    )
+    pubsub_ctl = DiffPubSubOperator(pubsub_reader)
 
-    while True:
-        logger.info(f"Reading messages from subscription: {gcp_pubsub}")
-        messages = pub_ctl.get_messages(10)
+    # Initialize the API controller
+    api_auth = OpenIDAuthenticator(gcp_key_path, api_url)
+    api_conn = RestOutputAPI(api_url, api_auth)
+    api_ctl = DialectMapOperator(api_conn)
 
-        if len(messages) == 0:
-            logger.info("No more Pub/Sub messages")
-            logger.info("Stopping Pub/Sub job...")
-            pub_ctl.reader.close()
-            break
-
-        for message in messages:
-            try:
-                mapper = mappers[message.source_file]
-                dispatch_record(api_ctl, mapper, message)
-            except Exception as error:
-                logger.error(f"Dispatch process stopped: {error}")
-                break
-
-
-def dispatch_record(api: BaseAPIOperator, mapper: BaseRecordMapper, message) -> None:
-    """
-    Dispatch message inner data record using the provided API operator
-    :param api: Dialect map API operator
-    :param mapper: diff message records mapper
-    :param message: diff message to dispatch
-    """
-
-    record_data = message.record
-    record_route = mapper.infer_route(record_data)
-
-    if message.is_creation:
-        api.create_record(record_data, record_route)
-        logger.info(f"Created record: {record_route}")
-
-    if message.is_edition:
-        api.archive_record(record_data, record_route)
-        logger.info(f"Archived record: {record_route}")
+    # Initialize and run the complete pipeline
+    pipeline = PubSubPipeline(pubsub_ctl, api_ctl)
+    pipeline.add_mapper("categories.json", SchemaRecordMapper([CATEGORY_ROUTE]))
+    pipeline.add_mapper("jargons.json", SchemaRecordMapper([GROUP_ROUTE, JARGON_ROUTE]))
+    pipeline.run()
 
 
 if __name__ == "__main__":
