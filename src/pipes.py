@@ -58,7 +58,7 @@ class PubSubPipeline(BasePipeline):
 
     def add_mapper(self, file_name: str, msg_mapper: BaseRecordMapper) -> None:
         """
-        Adds a message mapper to the list of mappers, using the source file name as key
+        Adds a message mapper to the dict of mappers, using a file name as key
         :param file_name: message source file to be used as key
         :param msg_mapper: message mapper object to infer the API route
         """

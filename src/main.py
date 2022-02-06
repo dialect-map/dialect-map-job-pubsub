@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import click
-import logging
 
 from click import Context
 from click import Path
@@ -19,8 +18,6 @@ from job.mapping import JARGON_ROUTE
 from job.output import DialectMapOperator
 from logs import setup_logger
 from pipes import PubSubPipeline
-
-logger = logging.getLogger()
 
 
 @click.group()
