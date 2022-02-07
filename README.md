@@ -1,4 +1,4 @@
-# Dialect map: static-data job ⚙️
+# Dialect map: Pub/Sub job ⚙️
 
 [![CI/CD Status][ci-status-badge]][ci-status-link]
 [![Coverage Status][cov-status-badge]][cov-status-link]
@@ -7,12 +7,11 @@
 
 
 ### About
-This repository contains the data-ingestion job to propagate _static_ data to the database.
-The _static_ term makes reference to the [Dialect map data][dialect-map-data] slow change pace.
+This repository contains the data-ingestion job to propagate Pub/Sub data to the database.
 
 It relies on [Dialect map IO][dialect-map-io], which provides PubSub / API connection capabilities,
 and [Dialect map schemas][dialect-map-schemas], which provides data (de)serialization capabilities,
-in order to send validated records to the [Dialect map private API][dialect-map-private-api] component.
+in order to send validated records to the [Dialect map private API][dialect-map-private-api].
 
 
 ### Dependencies
@@ -52,9 +51,9 @@ The top-level options are:
 | --log-level    | DIALECT_MAP_LOG_LEVEL  | INFO             | No       | Log messages level                       |
 
 
-#### Command: `pubsub-job`
-This command starts a [GCP Pub/Sub][google-pub-sub] reading job, that dispatches message encoded
-data records to the Dialect Map _private_ API, until no more messages are available.
+#### Command: `data-diff-job`
+This command starts a [Google Pub/Sub][google-pub-sub] subscription reading job, that dispatches _data-diff_
+message records coming from the [Dialect map data][dialect-map-data] repository, to the Dialect map _private_ API.
 
 The command arguments are:
 
@@ -66,14 +65,14 @@ The command arguments are:
 | --api-url      | -                      | -                | Yes      | Private API base URL                     |
 
 
-[ci-status-badge]: https://github.com/dialect-map/dialect-map-job-static/actions/workflows/ci.yml/badge.svg?branch=main
-[ci-status-link]: https://github.com/dialect-map/dialect-map-job-static/actions/workflows/ci.yml?query=branch%3Amain
+[ci-status-badge]: https://github.com/dialect-map/dialect-map-job-pubsub/actions/workflows/ci.yml/badge.svg?branch=main
+[ci-status-link]: https://github.com/dialect-map/dialect-map-job-pubsub/actions/workflows/ci.yml?query=branch%3Amain
 [code-style-badge]: https://img.shields.io/badge/code%20style-black-000000.svg
 [code-style-link]: https://github.com/psf/black
-[cov-status-badge]: https://codecov.io/gh/dialect-map/dialect-map-job-static/branch/main/graph/badge.svg
-[cov-status-link]: https://codecov.io/gh/dialect-map/dialect-map-job-static
+[cov-status-badge]: https://codecov.io/gh/dialect-map/dialect-map-job-pubsub/branch/main/graph/badge.svg
+[cov-status-link]: https://codecov.io/gh/dialect-map/dialect-map-job-pubsub
 [mit-license-badge]: https://img.shields.io/badge/License-MIT-blue.svg
-[mit-license-link]: https://github.com/dialect-map/dialect-map-job-static/blob/main/LICENSE
+[mit-license-link]: https://github.com/dialect-map/dialect-map-job-pubsub/blob/main/LICENSE
 
 [dialect-map-data]: https://github.com/dialect-map/dialect-map-data
 [dialect-map-io]: https://github.com/dialect-map/dialect-map-io

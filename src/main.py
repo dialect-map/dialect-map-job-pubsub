@@ -68,7 +68,7 @@ def main(context: Context, log_level: str):
     required=True,
     type=str,
 )
-def pubsub_job(gcp_project: str, gcp_pubsub: str, gcp_key_path: str, api_url: str):
+def data_diff_job(gcp_project: str, gcp_pubsub: str, gcp_key_path: str, api_url: str):
     """
     Starts a data ingestion job reading messages from Google Pub/sub.
     Stops when no more messages are read.
