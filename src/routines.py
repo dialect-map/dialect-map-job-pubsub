@@ -12,8 +12,8 @@ from job.output import BaseAPIOperator
 logger = logging.getLogger()
 
 
-class BasePipeline(ABC):
-    """Base class for the job pipelines"""
+class BaseRoutine(ABC):
+    """Base class for the job routines"""
 
     @abstractmethod
     def run(self, batch_size: int) -> None:
@@ -25,12 +25,12 @@ class BasePipeline(ABC):
         raise NotImplementedError()
 
 
-class PubSubPipeline(BasePipeline):
-    """Pipeline moving Pub/Sub messages to an API REST"""
+class PubSubRoutine(BaseRoutine):
+    """Routine moving Pub/Sub messages to an API REST"""
 
     def __init__(self, pub_ctl: BasePubSubOperator, api_ctl: BaseAPIOperator):
         """
-        Initializes the Google Pub/Sub - REST API pipeline
+        Initializes the Google Pub/Sub - REST API routine
         :param pub_ctl: Pub/Sub operator to be used as input
         :param api_ctl: API REST operator to be used as output
         """
@@ -89,7 +89,7 @@ class PubSubPipeline(BasePipeline):
 
             if len(messages) == 0:
                 logger.info("No more Pub/Sub messages")
-                logger.info("Stopping Pub/Sub pipeline...")
+                logger.info("Stopping Pub/Sub routine...")
                 self.pub_ctl.close()
                 break
 

@@ -17,7 +17,7 @@ from job.mapping import GROUP_ROUTE
 from job.mapping import JARGON_ROUTE
 from job.output import DialectMapOperator
 from logs import setup_logger
-from pipes import PubSubPipeline
+from routines import PubSubRoutine
 
 
 @click.group()
@@ -91,11 +91,11 @@ def data_diff_job(gcp_project: str, gcp_pubsub: str, gcp_key_path: str, api_url:
     api_conn = RestOutputAPI(api_url, api_auth)
     api_ctl = DialectMapOperator(api_conn)
 
-    # Initialize and run the complete pipeline
-    pipeline = PubSubPipeline(pubsub_ctl, api_ctl)
-    pipeline.add_mapper("categories.json", SchemaRecordMapper([CATEGORY_ROUTE]))
-    pipeline.add_mapper("jargons.json", SchemaRecordMapper([GROUP_ROUTE, JARGON_ROUTE]))
-    pipeline.run()
+    # Initialize and start the routine
+    routine = PubSubRoutine(pubsub_ctl, api_ctl)
+    routine.add_mapper("categories.json", SchemaRecordMapper([CATEGORY_ROUTE]))
+    routine.add_mapper("jargons.json", SchemaRecordMapper([GROUP_ROUTE, JARGON_ROUTE]))
+    routine.run()
 
 
 if __name__ == "__main__":
