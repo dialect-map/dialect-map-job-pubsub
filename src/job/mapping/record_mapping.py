@@ -45,7 +45,7 @@ class SchemaRecordMapper(BaseRecordMapper):
         """
 
         for route in self.routes:
-            schema = route.model_schema()
+            schema = route.schema()
 
             try:
                 schema.load(record)
