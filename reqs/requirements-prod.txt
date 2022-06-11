@@ -1,5 +1,5 @@
 # Public packages
-click==8.1.2
+click==8.1.3
 
 # Private packages
 git+ssh://git@github.com/dialect-map/dialect-map-io.git@v0.4.0#egg=dialect-map-io[gcp]
