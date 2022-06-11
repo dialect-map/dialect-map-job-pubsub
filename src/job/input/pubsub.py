@@ -79,7 +79,7 @@ class DiffPubSubOperator(BasePubSubOperator):
         self._check_message_type(msg_id, msg_meta)
 
         try:
-            data_dict = self.parser.parse_bytes(msg_data)
+            data_dict = self.parser.parse_string(msg_data)
             data_diff = DiffMessage.from_pubsub(data_dict)
         except Exception as error:
             logger.error(f"Cannot parse message {msg_id} with data: {msg_data}")
