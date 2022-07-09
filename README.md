@@ -18,7 +18,8 @@ in order to send validated records to the [Dialect map private API][dialect-map-
 Python dependencies are specified on the multiple files within the `reqs` directory.
 
 In order to install all the development packages, as well as the defined commit hooks:
-```sh
+
+```shell
 make install-dev
 ```
 
@@ -26,43 +27,38 @@ make install-dev
 ### Formatting
 All Python files are formatted using [Black][web-black], and the custom properties defined
 in the `pyproject.toml` file.
-```sh
+
+```shell
 make check
 ```
 
 
 ### Testing
 Project testing is performed using [Pytest][web-pytest]. In order to run the tests:
-```sh
+
+```shell
 make test
 ```
 
 
 ### CLI 🚀
 The project contains a [main.py][main-module] module exposing a CLI with several commands:
-```sh
+
+```shell
 python3 src/main.py [OPTIONS] [COMMAND] [ARGS]...
 ```
-
-The top-level options are:
-
-| OPTION         | ENV VARIABLE           | DEFAULT          | REQUIRED | DESCRIPTION                              |
-|----------------|------------------------|------------------|----------|------------------------------------------|
-| --log-level    | DIALECT_MAP_LOG_LEVEL  | INFO             | No       | Log messages level                       |
 
 
 #### Command: `data-diff-job`
 This command starts a [Google Pub/Sub][google-pub-sub] subscription reading job, that dispatches _data-diff_
 message records coming from the [Dialect map data][dialect-map-data] repository, to the Dialect map _private_ API.
 
-The command arguments are:
-
-| ARGUMENT       | ENV VARIABLE           | DEFAULT          | REQUIRED | DESCRIPTION                              |
-|----------------|------------------------|------------------|----------|------------------------------------------|
-| --gcp-project  | -                      | -                | Yes      | GCP project name                         |
-| --gcp-pubsub   | -                      | -                | Yes      | GCP Pub/Sub subscription name            |
-| --gcp-key-path | -                      | -                | Yes      | GCP Service account key path             |
-| --api-url      | -                      | -                | Yes      | Private API base URL                     |
+| ARGUMENT       | ENV VARIABLE           | REQUIRED | DESCRIPTION                              |
+|----------------|------------------------|----------|------------------------------------------|
+| --gcp-project  | -                      | Yes      | GCP project name                         |
+| --gcp-pubsub   | -                      | Yes      | GCP Pub/Sub subscription name            |
+| --gcp-key-path | -                      | Yes      | GCP Service account key path             |
+| --api-url      | -                      | Yes      | Private API base URL                     |
 
 
 [ci-status-badge]: https://github.com/dialect-map/dialect-map-job-pubsub/actions/workflows/ci.yml/badge.svg?branch=main
