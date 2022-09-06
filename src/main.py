@@ -8,7 +8,7 @@ from click import Path
 from dialect_map_gcp.auth import DefaultAuthenticator
 from dialect_map_gcp.auth import OpenIDAuthenticator
 from dialect_map_gcp.data_input import PubSubReader
-from dialect_map_io.data_output import RestOutputAPI
+from dialect_map_io.handlers import DialectMapAPIHandler
 
 from job.input import DiffPubSubOperator
 from job.mapping import SchemaRecordMapper
@@ -86,9 +86,9 @@ def data_diff_job(gcp_project: str, gcp_pubsub: str, gcp_key_path: str, api_url:
     )
     pubsub_ctl = DiffPubSubOperator(pubsub_reader)
 
-    # Initialize the API controller
-    api_auth = OpenIDAuthenticator(gcp_key_path, api_url)
-    api_conn = RestOutputAPI(api_url, api_auth)
+    # Initialize API controller
+    api_auth = OpenIDAuthenticator(gcp_key_path, target_url=api_url)
+    api_conn = DialectMapAPIHandler(api_auth, base_url=api_url)
     api_ctl = DialectMapOperator(api_conn)
 
     # Initialize and start the routine

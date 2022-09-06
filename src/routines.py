@@ -49,11 +49,11 @@ class PubSubRoutine(BaseRoutine):
         msg_route = msg_mapper.infer_route(message.record)
 
         if message.is_creation:
-            self.api_ctl.create_record(message.record, msg_route)
+            self.api_ctl.create_record(msg_route, message.record)
             logger.info(f"Created record: {msg_route}")
 
         if message.is_edition:
-            self.api_ctl.archive_record(message.record, msg_route)
+            self.api_ctl.archive_record(msg_route, message.record)
             logger.info(f"Archived record: {msg_route}")
 
     def add_mapper(self, file_name: str, msg_mapper: BaseRecordMapper) -> None:
