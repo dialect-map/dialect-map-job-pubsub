@@ -5,7 +5,7 @@ import logging
 from abc import ABC
 from abc import abstractmethod
 
-from dialect_map_io import RestOutputAPI
+from dialect_map_io import DialectMapAPIHandler
 from dialect_map_schemas import APIRoute
 
 logger = logging.getLogger()
@@ -15,21 +15,21 @@ class BaseAPIOperator(ABC):
     """Interface for the data object operator classes"""
 
     @abstractmethod
-    def create_record(self, record_data: dict, record_route: APIRoute):
+    def create_record(self, record_route: APIRoute, record_data: dict):
         """
         Performs the creation of a record on a REST API
-        :param record_data: data record
         :param record_route: data record route
+        :param record_data: data record
         """
 
         raise NotImplementedError()
 
     @abstractmethod
-    def archive_record(self, record_data: dict, record_route: APIRoute):
+    def archive_record(self, record_route: APIRoute, record_data: dict):
         """
         Performs the archival of a record on a REST API
-        :param record_data: data record
         :param record_route: data record route
+        :param record_data: data record
         """
 
         raise NotImplementedError()
@@ -38,13 +38,13 @@ class BaseAPIOperator(ABC):
 class DialectMapOperator(BaseAPIOperator):
     """Class to operate on the Dialect map API"""
 
-    def __init__(self, api_object: RestOutputAPI):
+    def __init__(self, api_handler: DialectMapAPIHandler):
         """
         Initializes the Dialect map API operator object
-        :param api_object: Dialect map API instantiated object
+        :param api_handler: Dialect map API instantiated object
         """
 
-        self.api_object = api_object
+        self.api_handler = api_handler
 
     def _create(self, api_path: str, record: dict) -> None:
         """
@@ -54,7 +54,7 @@ class DialectMapOperator(BaseAPIOperator):
         """
 
         try:
-            self.api_object.create_record(api_path, record)
+            self.api_handler.create_record(api_path, record)
         except Exception as error:
             logger.error(f"Cannot create record: {record}")
             logger.error(f"Error: {error}")
@@ -68,13 +68,13 @@ class DialectMapOperator(BaseAPIOperator):
         """
 
         try:
-            self.api_object.archive_record(f"{api_path}/{record_id}")
+            self.api_handler.archive_record(f"{api_path}/{record_id}")
         except Exception as error:
             logger.error(f"Cannot archive record with ID: {record_id}")
             logger.error(f"Error: {error}")
             raise
 
-    def create_record(self, record_data: dict, record_route: APIRoute) -> None:
+    def create_record(self, record_route: APIRoute, record_data: dict) -> None:
         """
         Performs the creation of a record on a REST API
         :param record_data: data record
@@ -89,7 +89,7 @@ class DialectMapOperator(BaseAPIOperator):
             record_schema.dump(record_data),
         )
 
-    def archive_record(self, record_data: dict, record_route: APIRoute) -> None:
+    def archive_record(self, record_route: APIRoute, record_data: dict) -> None:
         """
         Performs the archival of a record on a REST API
         :param record_data: data record
