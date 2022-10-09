@@ -7,17 +7,13 @@ from abc import abstractmethod
 from typing import List
 
 from dialect_map_gcp import DiffMessage
-from dialect_map_gcp import PubSubReader
-from dialect_map_io import BaseDataParser
-from dialect_map_io import JSONDataParser
+from dialect_map_gcp import PubSubQueueHandler
 
 logger = logging.getLogger()
 
 
-class BasePubSubOperator(ABC):
-    """Interface for the Pub/Sub operator classes"""
-
-    msg_type: str
+class BasePubSubSource(ABC):
+    """Interface for the Pub/Sub source classes"""
 
     @abstractmethod
     def close(self) -> None:
@@ -36,34 +32,20 @@ class BasePubSubOperator(ABC):
         raise NotImplementedError()
 
 
-class DiffPubSubOperator(BasePubSubOperator):
-    """Pub/Sub operator for the data diff messages"""
+class DiffPubSubSource(BasePubSubSource):
+    """Pub/Sub source for the data diff messages"""
 
-    msg_type = "data-diff"
+    msg_type = DiffMessage
 
-    def __init__(self, reader: PubSubReader, parser: BaseDataParser = None):
+    def __init__(self, handler: PubSubQueueHandler, subscription: str):
         """
-        Initializes the Pub/Sub operator with a given parser and reader
-        :param reader: object to retrieve the Pub/Sub messages
-        :param parser: object to parse and decode the messages data
-        """
-
-        if parser is None:
-            parser = JSONDataParser()
-
-        self.reader = reader
-        self.parser = parser
-
-    def _check_message_type(self, message_id: str, message_meta: dict) -> None:
-        """
-        Checks whether the message metadata type matches the desired one
-        :param message_id: message unique identifier
-        :param message_meta: message custom attributes
+        Initializes the Pub/Sub operator with a given handler
+        :param handler: object to retrieve the Pub/Sub messages
+        :param subscription: Pub/sub subscription to get messages from
         """
 
-        if not message_meta["msgType"] == self.msg_type:
-            logger.warning(f"Unexpected type. Ignoring message: {message_id}")
-            raise TypeError(f"Unexpected type")
+        self.queue_handler = handler
+        self.queue_name = subscription
 
     def _parse_message(self, message: object) -> DiffMessage:
         """
@@ -72,17 +54,13 @@ class DiffPubSubOperator(BasePubSubOperator):
         :return: decoded data-diff message object
         """
 
-        msg_id = self.reader.get_message_id(message)
-        msg_data = self.reader.get_message_data(message)
-        msg_meta = self.reader.get_message_metadata(message)
-
-        self._check_message_type(msg_id, msg_meta)
+        if not isinstance(message, dict):
+            raise TypeError("Received message is not a Python dictionary")
 
         try:
-            data_dict = self.parser.parse_string(msg_data)
-            data_diff = DiffMessage.from_pubsub(data_dict)
+            data_diff = self.msg_type.from_pubsub(message)
         except Exception as error:
-            logger.error(f"Cannot parse message {msg_id} with data: {msg_data}")
+            logger.error(f"Cannot parse message: {message}")
             logger.error(f"Error detailed info: {error}")
             raise ValueError()
         else:
@@ -91,30 +69,28 @@ class DiffPubSubOperator(BasePubSubOperator):
     def close(self) -> None:
         """Closes the Pub/Sub connection"""
 
-        self.reader.close()
+        self.queue_handler.close()
 
     def get_messages(self, num_messages: int) -> List[DiffMessage]:
         """
-        Retrieve messages from a Pub/Sub subscription and decode them as objects
+        Retrieve parsed diff messages from a Pub/Sub subscription
         :param num_messages: maximum number of messages to retrieve
         :return: list of data objects
         """
 
-        read_messages = self.reader.pull_messages(num_messages)
-        good_messages = []
-        data_diffs = []
+        diff_messages = self.queue_handler.pull_messages(self.queue_name, num_messages)
+        diff_objects = []
 
-        for msg in read_messages:
+        for msg in diff_messages:
             try:
-                data_diff = self._parse_message(msg)
-                data_diffs.append(data_diff)
-            except TypeError:
-                continue
+                diff_object = self._parse_message(msg)
+                diff_objects.append(diff_object)
             except ValueError:
+                # TODO: Save acked messages locally
+                self.close()
                 raise
-            else:
-                good_messages.append(msg)
+            except Exception:
+                self.close()
+                raise
 
-        # Only properly decoded messages are acknowledged
-        self.reader.ack_messages(good_messages)
-        return data_diffs
+        return diff_objects

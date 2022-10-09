@@ -7,10 +7,10 @@ from click import Path
 
 from dialect_map_gcp.auth import DefaultAuthenticator
 from dialect_map_gcp.auth import OpenIDAuthenticator
-from dialect_map_gcp.data_input import PubSubReader
+from dialect_map_gcp.handlers import PubSubQueueHandler
 from dialect_map_io.handlers import DialectMapAPIHandler
 
-from job.input import DiffPubSubOperator
+from job.input import DiffPubSubSource
 from job.mapping import SchemaRecordMapper
 from job.mapping import CATEGORY_ROUTE
 from job.mapping import GROUP_ROUTE
@@ -47,12 +47,6 @@ def main(context: Context, log_level: str):
     type=str,
 )
 @click.option(
-    "--gcp-pubsub",
-    help="GCP PubSub subscription",
-    required=True,
-    type=str,
-)
-@click.option(
     "--gcp-key-path",
     help="GCP Service Account key path",
     required=True,
@@ -63,12 +57,18 @@ def main(context: Context, log_level: str):
     ),
 )
 @click.option(
+    "--subscription",
+    help="GCP PubSub subscription",
+    required=True,
+    type=str,
+)
+@click.option(
     "--api-url",
     help="Private API base URL",
     required=True,
     type=str,
 )
-def data_diff_job(gcp_project: str, gcp_pubsub: str, gcp_key_path: str, api_url: str):
+def data_diff_job(gcp_project: str, gcp_key_path: str, subscription: str, api_url: str):
     """
     Starts a data ingestion job reading messages from Google Pub/sub.
     Stops when no more messages are read.
@@ -77,14 +77,13 @@ def data_diff_job(gcp_project: str, gcp_pubsub: str, gcp_key_path: str, api_url:
     Ref: dialect_map_gcp.models.message.DiffMessage
     """
 
-    # Initialize the Pub/Sub controller
+    # Initialize the Pub/Sub source
     pubsub_auth = DefaultAuthenticator(gcp_key_path)
-    pubsub_reader = PubSubReader(
+    pubsub_handler = PubSubQueueHandler(
         project_id=gcp_project,
-        subscription=gcp_pubsub,
         auth_ctl=pubsub_auth,
     )
-    pubsub_ctl = DiffPubSubOperator(pubsub_reader)
+    pubsub_source = DiffPubSubSource(pubsub_handler, subscription)
 
     # Initialize API controller
     api_auth = OpenIDAuthenticator(gcp_key_path, target_url=api_url)
@@ -92,7 +91,7 @@ def data_diff_job(gcp_project: str, gcp_pubsub: str, gcp_key_path: str, api_url:
     api_ctl = DialectMapOperator(api_conn)
 
     # Initialize and start the routine
-    routine = PubSubRoutine(pubsub_ctl, api_ctl)
+    routine = PubSubRoutine(pubsub_source, api_ctl)
     routine.add_mapper("categories.json", SchemaRecordMapper([CATEGORY_ROUTE]))
     routine.add_mapper("jargons.json", SchemaRecordMapper([GROUP_ROUTE, JARGON_ROUTE]))
     routine.run()
