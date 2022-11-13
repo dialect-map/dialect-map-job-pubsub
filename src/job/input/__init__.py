@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-from .pubsub import BasePubSubOperator
-from .pubsub import DiffPubSubOperator
+from .pubsub import BasePubSubSource
+from .pubsub import DiffPubSubSource

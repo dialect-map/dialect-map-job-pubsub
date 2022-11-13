@@ -5,7 +5,7 @@ import logging
 from abc import ABC
 from abc import abstractmethod
 
-from job.input import BasePubSubOperator
+from job.input import BasePubSubSource
 from job.mapping import BaseRecordMapper
 from job.output import BaseAPIOperator
 
@@ -28,7 +28,7 @@ class BaseRoutine(ABC):
 class PubSubRoutine(BaseRoutine):
     """Routine moving Pub/Sub messages to an API REST"""
 
-    def __init__(self, pub_ctl: BasePubSubOperator, api_ctl: BaseAPIOperator):
+    def __init__(self, pub_ctl: BasePubSubSource, api_ctl: BaseAPIOperator):
         """
         Initializes the Google Pub/Sub - REST API routine
         :param pub_ctl: Pub/Sub operator to be used as input
@@ -49,11 +49,11 @@ class PubSubRoutine(BaseRoutine):
         msg_route = msg_mapper.infer_route(message.record)
 
         if message.is_creation:
-            self.api_ctl.create_record(message.record, msg_route)
+            self.api_ctl.create_record(msg_route, message.record)
             logger.info(f"Created record: {msg_route}")
 
         if message.is_edition:
-            self.api_ctl.archive_record(message.record, msg_route)
+            self.api_ctl.archive_record(msg_route, message.record)
             logger.info(f"Archived record: {msg_route}")
 
     def add_mapper(self, file_name: str, msg_mapper: BaseRecordMapper) -> None:

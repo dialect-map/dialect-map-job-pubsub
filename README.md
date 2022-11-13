@@ -56,8 +56,8 @@ message records coming from the [Dialect map data][dialect-map-data] repository,
 | ARGUMENT       | ENV VARIABLE           | REQUIRED | DESCRIPTION                              |
 |----------------|------------------------|----------|------------------------------------------|
 | --gcp-project  | -                      | Yes      | GCP project name                         |
-| --gcp-pubsub   | -                      | Yes      | GCP Pub/Sub subscription name            |
 | --gcp-key-path | -                      | Yes      | GCP Service account key path             |
+| --subscription | -                      | Yes      | GCP Pub/Sub subscription name            |
 | --api-url      | -                      | Yes      | Private API base URL                     |
 
 
