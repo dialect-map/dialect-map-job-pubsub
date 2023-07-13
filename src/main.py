@@ -20,7 +20,7 @@ from logs import setup_logger
 from routines import PubSubRoutine
 
 
-@click.group()
+@click.group(cls=None)
 @click.option(
     "--log-level",
     envvar="DIALECT_MAP_LOG_LEVEL",
