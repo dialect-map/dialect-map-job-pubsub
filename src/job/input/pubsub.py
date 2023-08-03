@@ -5,6 +5,7 @@ import logging
 from abc import ABC
 from abc import abstractmethod
 from typing import List
+from typing import override
 
 from dialect_map_gcp import DiffMessage
 from dialect_map_gcp import PubSubQueueHandler
@@ -66,11 +67,13 @@ class DiffPubSubSource(BasePubSubSource):
         else:
             return data_diff
 
+    @override
     def close(self) -> None:
         """Closes the Pub/Sub connection"""
 
         self.queue_handler.close()
 
+    @override
     def get_messages(self, num_messages: int) -> List[DiffMessage]:
         """
         Retrieve parsed diff messages from a Pub/Sub subscription

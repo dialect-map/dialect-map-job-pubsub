@@ -5,6 +5,7 @@ import logging
 from abc import ABC
 from abc import abstractmethod
 from typing import List
+from typing import override
 
 from dialect_map_schemas import APIRoute
 from dialect_map_schemas import SchemaError
@@ -37,6 +38,7 @@ class SchemaRecordMapper(BaseRecordMapper):
 
         self.routes = routes
 
+    @override
     def infer_route(self, record: dict) -> APIRoute:
         """
         Infers the corresponding API route from a given data record

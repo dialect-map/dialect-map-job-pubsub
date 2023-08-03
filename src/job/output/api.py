@@ -4,6 +4,7 @@ import logging
 
 from abc import ABC
 from abc import abstractmethod
+from typing import override
 
 from dialect_map_io import DialectMapAPIHandler
 from dialect_map_schemas import APIRoute
@@ -74,6 +75,7 @@ class DialectMapOperator(BaseAPIOperator):
             logger.error(f"Error: {error}")
             raise
 
+    @override
     def create_record(self, record_route: APIRoute, record_data: dict) -> None:
         """
         Performs the creation of a record on a REST API
@@ -89,6 +91,7 @@ class DialectMapOperator(BaseAPIOperator):
             record_schema.dump(record_data),
         )
 
+    @override
     def archive_record(self, record_route: APIRoute, record_data: dict) -> None:
         """
         Performs the archival of a record on a REST API

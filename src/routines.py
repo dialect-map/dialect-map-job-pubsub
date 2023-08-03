@@ -4,6 +4,7 @@ import logging
 
 from abc import ABC
 from abc import abstractmethod
+from typing import override
 
 from job.input import BasePubSubSource
 from job.mapping import BaseRecordMapper
@@ -77,6 +78,7 @@ class PubSubRoutine(BaseRoutine):
             logger.error(f"Invalid message source file: {file_name}")
             raise
 
+    @override
     def run(self, batch_size: int = 10) -> None:
         """
         Main routine to move messages from a Pub/Sub topic to a REST API
